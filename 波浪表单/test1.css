@@ -1,0 +1,112 @@
+ * {
+     margin: 0;
+     padding: 0;
+     box-sizing: border-box;
+ }
+ body {
+     background: #8360c3;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #2ebf91, #8360c3);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #2ebf91, #8360c3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+font-family: 'Muli', sans-serif;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     width: 100vw;
+     height: 100vh;
+ }
+ /* 表单部分开始 */
+ .login {
+     width: 380px;
+     height: 440px;
+     background-color: rgba(0,0,0,.4);
+     display: flex;
+     flex-flow: column;
+justify-content: space-around;
+align-items: center;
+border-radius: 10px;
+ }
+.login h1 {
+    color: white;
+}
+.inputarea {
+position: relative;
+}
+ .inputarea input {
+     background: transparent;
+     border: 0;
+    
+     font-size: 18px;
+     border-bottom: 2px solid white;
+     padding: 20px 0 10px 0;
+ }
+ .inputarea label {
+     position: absolute;
+     top: 18px;
+     left: 0;
+     font-size: 18px;
+     color: white;
+    pointer-events: none;
+    /* 排除label字体影响 */
+     
+ }
+ .inputarea input:focus ,
+.inputarea input:valid  {
+    outline: 0;
+color: white;
+border-bottom: 2px solid lightblue;
+}
+
+.inputarea label span {
+/* translate* 对行内元素无效  */
+    display: inline-block;
+    min-width: 3px;
+    font-size: 18px;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+/* 选择指定元素后的一个同级元素 */
+.inputarea input:focus + label span,
+.inputarea input:valid + label span {
+    color: lightblue;
+    transform: translateY(-30px);
+}
+/* 表单部分结束 */
+/* 按钮部分开始 */
+.login_btn {
+    width: 200px;
+    height: 50px;
+    font-size: 20px;
+    position: relative;
+    border: 2px solid white;
+    border-radius: 5px;
+    color: white;
+    z-index: 1;
+    background: transparent;
+    transition: all 250ms;
+    overflow: hidden;
+}
+.login_btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: white;
+    width: 0;
+    z-index: -1;
+    height: 100%;
+    transition: all 0.5s;
+}
+.login_btn:hover::after {
+    width: 100%;
+}
+.login_btn:hover {
+    color: black;
+    /* border: 2px solid black; */
+    transform: translateY(-1px);
+}
+.login_btn:active {
+    transform: translateY(2px);
+}
+/* 按钮部分结束 */
+.login  a {
+    color:white;
+}
