@@ -1,0 +1,105 @@
+/* 自定义属性值 通过var（   ） */
+
+:root {
+    --bg-color: #eaecf0;
+    --main-color: #5080ef;
+    --nav-item-width: 100px;
+    --nav-item-height: 32px;
+    --nav-item-border-width: 4px;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+}
+body,html {
+   
+    width: 100vw;
+    height: 100vh;
+}
+body { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--bg-color);
+}
+
+/* 通过nav
+1.给内边距
+2.fs给0
+3.z-index给1 */
+.nav {
+    position:relative;
+    background-color: white;
+    padding: var(--nav-item-border-width);
+    z-index: 1;
+    font-size: 0px;
+    border-radius: 24px;
+
+}
+/* 选项
+1.设置大小
+2.布局为inline-block（？
+3.颜色的过渡 */
+.nav-item {
+    width: var(--nav-item-width);
+    height: var(--nav-item-height);
+    font-size: 14px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--main-color);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    transition: color 0.6s ease-in-out;
+}
+
+
+/* 隐藏所有的单选按钮 */
+.nav>input[type = "radio"] {
+    width: 0;
+    height: 0;
+    opacity: 0;
+}
+
+/* nav中被选中的radio的同级后面的一个label的颜色改变 */
+/* .nav>input[type = "radio"]:checked+label {} */
+
+.nav>input[type = "radio"]:checked+label {
+    color: white;
+}
+
+
+/* “定位器”
+1.position:absolute 
+2.left 与 top 为border值
+2.z-index 为底层-1;
+3.给圆角
+*/
+.traker {
+    width: var(--nav-item-width);
+    height: var(--nav-item-height);
+    background-color: var(--main-color);
+    position : absolute;
+    left: var(--nav-item-border-width);
+    top: var(--nav-item-border-width);
+    z-index: -1;
+    border-radius: 24px;
+transition: transform 0.4s ease-in-out;
+}
+
+
+/* 剩余选项
+1.设置他们相对于原始位置的偏移量 
++ 兄弟选择器  指定元素的随后的一个同级元素
+～ 通用兄弟选择器 指定元素的所有同级指定元素
+>子选择器 指定元素的的所有指定后代
+*/
+#nav-item-2:checked~.traker {
+    transform: translateX(calc(var(--nav-item-width)));
+}
+#nav-item-3:checked~.traker {
+    transform: translateX(calc(var(--nav-item-width)*2));
+}
+#nav-item-4:checked~.traker {
+    transform: translateX(calc(var(--nav-item-width)*3));
+}

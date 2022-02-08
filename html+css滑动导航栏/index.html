@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>滑动导航栏</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <!-- 滑动导航栏原理
+    1.为了达到选中的效果 使用radio 
+    2.隐藏所有的radio按钮
+    3.nav的字体大小为0
+    4.input的ID为lable的for
+    5.通过lable的class来设置单独项
+    6.设置traker为position为absolute来达到滑动的效果-->
+    <div class="nav">
+        <input type="radio" name="item-op" id="nav-item-1" checked>
+        <label for="nav-item-1" class="nav-item">首页</label>
+
+        <input type="radio" name="item-op" id="nav-item-2">
+        <label for="nav-item-2" class="nav-item">javaScript</label>
+
+        <input type="radio" name="item-op" id="nav-item-3">
+        <label for="nav-item-3" class="nav-item">html</label>
+
+        <input type="radio" name="item-op" id="nav-item-4">
+        <label for="nav-item-4" class="nav-item">css</label>
+
+
+        <div class="traker"></div>
+    </div>
+</body>
+
+</html>
