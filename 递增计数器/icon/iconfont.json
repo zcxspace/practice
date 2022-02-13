@@ -1,0 +1,23 @@
+{
+  "id": "3176570",
+  "name": "社交媒体图标",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "4936961",
+      "name": "facebook",
+      "font_class": "facebook",
+      "unicode": "e87d",
+      "unicode_decimal": 59517
+    },
+    {
+      "icon_id": "10841487",
+      "name": "ins",
+      "font_class": "ins",
+      "unicode": "e664",
+      "unicode_decimal": 58980
+    }
+  ]
+}
