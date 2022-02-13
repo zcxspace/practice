@@ -1,0 +1,23 @@
+{
+  "id": "3175408",
+  "name": "滚动轮播",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "555231",
+      "name": "上一张",
+      "font_class": "shangyizhang",
+      "unicode": "e6ae",
+      "unicode_decimal": 59054
+    },
+    {
+      "icon_id": "555232",
+      "name": "下一张",
+      "font_class": "xiayizhang",
+      "unicode": "e6af",
+      "unicode_decimal": 59055
+    }
+  ]
+}
