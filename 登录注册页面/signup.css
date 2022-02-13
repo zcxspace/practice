@@ -1,0 +1,120 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    background: #159957;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #155799, #159957);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #155799, #159957); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+display: flex;
+justify-content: center;
+/* align-items: center; */
+}
+@keyframes move {
+    0% {
+        transform: scale(0.7);
+    }
+    25% {
+        transform: scale(0.95);
+    }
+    50% {
+        transform: scale(1.03);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+.signup {
+    width: 400px;
+    height: 550px;
+    box-shadow: 3px 6px 19px -4px rgba(0,0,0,.6);
+    margin-top: 100px;
+    border-radius: 30px;
+    background: rgba(0,0,0,.3);
+    animation: move 1s linear 0s 1;
+   padding: 20px;
+}
+.signup_ban {
+    width: 100%;
+    height: 50px;
+    padding: 0 5px;
+    border-radius: 20px;
+    line-height: 50px;
+    background-color: rgba(240, 234, 234, 0.5);
+ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.signup_ban h1 {
+    display: inline-block;
+}
+.signup_ban i {
+float: right;
+transition: all ease 0.3s;
+}
+.signup_ban i:hover {
+    transform: translateX(-7px);
+}
+.signup_ban i:active {
+    transform: translateX(-1px);
+}
+.signup_info {
+    width: 100%;
+    height: 443px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-content: space-around;
+
+    margin-top: 15px;
+}
+.signup_info div {
+    width: 250px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.signup_info div:hover i {
+    transform: scale(1.13);
+}
+.signup_info div i {
+    transition: all ease .3s;
+    font-size: 30px;
+}
+.signup_info div:nth-child(-n+5) input {
+
+    width: 160px;
+    height: 25px;
+    background-color: transparent;
+    border: 0;
+    text-indent: 5px;
+border-bottom: 2px solid rgba(240, 234, 234, 0.5);
+    font-size: 20px;
+    outline: none;
+}
+.signupbtn {
+     width: 120px;
+    height: 35px;
+    display: inline-block;
+    background-color: rgba(240, 234, 234, 0.5);
+    border: 0;
+    font-size: 20px;
+margin-top: 20px;
+border-radius: 20px;
+transition: all ease .4s;
+letter-spacing: 3px;
+}
+.signupbtn:hover {
+    transform: translateY(-5px);
+}
+.signupbtn:active {
+    transform: translateY(-1px);
+}
+.signup .signup_info .invalid {
+    border: 2px  solid rgb(211, 60, 55);
+ 
+}
+.signup .signup_info .valid {
+    border: 2px solid rgb(77, 170, 77);
+}

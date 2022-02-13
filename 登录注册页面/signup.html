@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="signup.css">
+    <link rel="stylesheet" href="font_3163829_ey18yyt9gzo/iconfont.css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_3163829_0c3l2pesqwqs.css">
+</head>
+
+<body>
+    <div class="signup">
+
+        <div class="signup_ban">
+            <h1>Signup</h1>
+            <a href="signin.html"><i class="iconfont icon-login_back" style="font-size: 30px; color: black"></i></a>
+        </div>
+        <div class="signup_info">
+            <div><i class="iconfont icon-youxiang"></i>:<input type="text" id="email"></div>
+            <div class="error-email"></div>
+            <div><i class="iconfont icon-mima"></i>:<input type="password" class="password"></div>
+            <div class="error-password"></div>
+            <div><i class="iconfont icon-ic_nickname"></i>:<input type="text" name="" id="nickname"></div>
+            <div class="error-nickname"></div>
+            <div>
+                <label for="man">
+                    <i class="iconfont icon-nansheng "></i><input type="radio" name="gender" value="man" id="man">
+                </label>
+                <label for="woman"><i class="iconfont icon-nvsheng "></i> <input type="radio" name="gender"
+                        value="woman" id="woman">
+                </label>
+            </div>
+            <div><button class="signupbtn">注册</button></div>
+        </div>
+    </div>
+</body>
+<script src="signup.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</html>
