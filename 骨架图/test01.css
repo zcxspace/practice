@@ -1,0 +1,86 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+   width: 100vw;
+   height: 100vh;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+.card {
+  overflow: hidden;
+  border-radius: 10px;
+  height: 300px;
+  width: 200px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+
+}
+.card_img {
+  width: 100%;
+  height: 200px;
+  background: rgb(240, 240, 240);
+}
+.card_img img {
+  width: 100%;
+  height: 100%;
+}
+.card_info {
+  flex: 1;
+
+}
+.text {
+border-radius: 20px;
+  width: 100px;
+  height: 20px;
+  margin-top: 10px;
+}
+/*  */
+.anibg {
+  background-image: linear-gradient(
+    to right,
+   #f6f7f8 0%,
+    #edeef1 10%,
+    #f6f7f8 20%,
+    #f6f7f8 100%
+  );
+  background-size: 200% 100%;
+animation: bg 1s linear 0s infinite ;
+}
+@keyframes bg {
+  0% {
+background-position: 50% 0;
+  }
+  100% {
+background-position: -150% 0;
+
+  }
+}
+
+/* 
+background-position
+
+当指定百分比值的时候，实际上执行了以下的计算公式（该公式可以用数学方式定义图片和容器相对位置重合）：
+
+(container width - image width) * (position x%) = (x offset value)
+(container height - image height) * (position y%) = (y offset value)
+
+使用X坐标来举个例子，假设有一个300px宽的图片，将这个图片使用到一个100px宽的容器中，并且将background-size设置成自动：
+
+100px - 300px = -200px (容器和图片的宽度差)
+
+当对background-position设置值依次为-25%，0%，50%，100%，125%，得到图片相对容器的偏移值为：
+
+-200px * -25% = 50px
+-200px * 0% = 0px
+-200px * 50% = -100px
+-200px * 100% = -200px
+-200px * 125% = -250px
+*/
