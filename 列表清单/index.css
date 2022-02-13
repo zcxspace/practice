@@ -1,0 +1,181 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    background: #159957;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #155799, #159957);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #155799, #159957); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+.tasktab {
+    border-radius: 6px;
+    color: white;
+    float: left;
+    margin: 10px;
+    width: 300px;
+    /* height: 450px; */
+    display: flex;
+flex-direction: column;
+justify-content: space-between;
+align-items: center;
+background-color: #232529;
+animation: move 0.35s linear 0s;
+}
+.title {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   position: relative;
+   font-size: 30px;
+    padding: 0 5px;
+}
+.title button  {
+    position: absolute;
+    right: 8px;
+   
+    border: 0;
+    background: transparent;
+    /* font-size: 25px; */
+}
+
+.title button i {
+    font-size: 25px;
+    color: white;
+}
+i {
+    pointer-events: none;
+}
+
+.taskarea {
+    min-height: 100px;
+    width: 100%;
+    padding: 10px;
+}
+.deltabbtn {
+    transition: all 0.4s ease;
+}
+.deltabbtn:active {
+    transform: scale(1.16);
+}
+
+.additembtn {
+    transition: all 0.4s ease;
+    
+}
+.tasktiem {
+    width: 100%;
+    height: 30px;
+    margin: 10px 0;
+     display: flex;
+     letter-spacing: 2px;
+     padding-left: 2px;
+animation: move 0.35s linear 0s;
+    justify-content: flex-start;
+    align-items: center;
+    color: black;
+    background-color: #696e79;
+    border-radius: 3px;
+    position: relative;
+}
+.tasktiem button{
+    position: absolute;
+    right: 6px;
+    border: 0;
+    background: transparent;
+}
+.tasktiem button i {
+    font-size: 20px;
+}
+.addtaskitem {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.addtaskarea {
+display: flex;
+transition: color 0.2s ease-in;
+    justify-content: center;
+    align-items: center;
+}
+.addtaskarea button {
+    border: 0;
+    width: 30px;
+    height: 30px;
+    transition: all 0.4s ease;
+    background: transparent;
+}
+.addtaskarea button i {
+    font-size: 30px;
+    color: white
+}
+.addtaskarea button:active {
+    transform: scale(0.85);
+}
+.addtaskarea input {
+    width: 0;
+    border: 0;
+    outline: none;
+    font-size: 20px;
+    transition: all 0.4s;
+    background: transparent;
+color: whitesmoke;
+}
+.addtaskarea:hover input {
+    width: 150px;
+}
+.addtaskarea:hover{
+/* background: #696e79; */
+
+border: 2px solid #868d9a;
+}
+.addnav {
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 5px;
+}
+.addnav button {
+    padding: 3px;
+    border: 3px solid black;
+    background: transparent;
+}
+.addnav input {
+    width: 0;
+    outline: none;
+    border: 0;
+padding: 4px;
+transition: all 0.6s;
+    font-size: 20px;
+    background: transparent;
+}
+.addnav:hover input {
+
+width: 150px;
+}
+@keyframes move {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.08);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+.addtab {
+    transition: all 0.4s ease;
+}
+.addtab
+.addtab:active {
+    transform: scale(.90);
+}
+.line {
+    text-decoration: line-through;
+}

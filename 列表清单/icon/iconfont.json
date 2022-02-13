@@ -1,0 +1,23 @@
+{
+  "id": "3178834",
+  "name": "增删改",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1056868",
+      "name": "删除",
+      "font_class": "shanchu",
+      "unicode": "e6ac",
+      "unicode_decimal": 59052
+    },
+    {
+      "icon_id": "3427825",
+      "name": "添加",
+      "font_class": "icon-",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    }
+  ]
+}
