@@ -31,10 +31,16 @@ let addevents = () => {
     // console.log(least);
     listsArr[0].click();
 }
-/* 右键显示菜单函数 */
-let showrightmenu = (e) => {
+/* 取消菜单函数 */
+let randomdel = () => {
     let menusArr = Array.from(menus);
     menusArr.forEach(menu => menu.remove());
+}
+/* 随机左键取消菜单 */
+document.body.addEventListener("click", randomdel);
+/* 右键显示菜单函数 */
+let showrightmenu = (e) => {
+    randomdel();
     let menu = `<div class="taskmenu">
                     <button class="rename">重新命名</button>
         <button class="delete">删除改列表</button>
@@ -45,9 +51,8 @@ let showrightmenu = (e) => {
     taskmenu.style.left = e.clientX + 5 + "px";
     taskmenu.style.top = e.clientY + 5 + "px";
     e.preventDefault()
-
-
 }
+
 /* 添加任务条函数 */
 let addtask = (e) => {
     let addtaskitembtnsArr = Array.from(addtaskitembtns);
