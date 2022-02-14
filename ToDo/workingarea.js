@@ -3,12 +3,12 @@ let diyarea = document.querySelector('.diyarea')
 let lists = diyarea.getElementsByClassName('listitem');
 let areas = document.getElementsByClassName('taskarea');
 let infoleft = document.querySelector('.infoleft');
-let i = 1;
 let mydayinfo = document.querySelector('.mydayinfo');
 let addtaskarea = document.querySelector('.addtaskarea');
 let inputs = addtaskarea.getElementsByClassName('taskinput');
 let addtaskitembtns = addtaskarea.getElementsByClassName('addtaskitem');
 let menus = document.getElementsByClassName('taskmenu');
+
 
 let add = (objs) => {
     objs.forEach(obj => {
@@ -31,15 +31,17 @@ let addevents = () => {
     // console.log(least);
     listsArr[0].click();
 }
+
 /* 取消菜单函数 */
 let randomdel = () => {
     let menusArr = Array.from(menus);
     menusArr.forEach(menu => menu.remove());
 }
-/* 随机左键取消菜单 */
-document.body.addEventListener("click", randomdel);
+
 /* 右键显示菜单函数 */
 let showrightmenu = (e) => {
+    let target = e.target;
+    let index = Array.from(lists).indexOf(target);
     randomdel();
     let menu = `<div class="taskmenu">
                     <button class="rename">重新命名</button>
@@ -47,12 +49,75 @@ let showrightmenu = (e) => {
                 </div>`
     document.body.insertAdjacentHTML('afterbegin', menu);
     let taskmenu = document.querySelector('.taskmenu');
-    taskmenu.style.display = "block";
-    taskmenu.style.left = e.clientX + 5 + "px";
-    taskmenu.style.top = e.clientY + 5 + "px";
+    let del = document.querySelector('.delete');
+    /* 删除 */
+    del.addEventListener('click', () => { dellist(index) })
+    resetposition(taskmenu, e, 5, 5);
+    /* 随机左键取消菜单 */
+    document.body.addEventListener("click", randomdel);
+
     e.preventDefault()
 }
 
+/* 设置模态框位置函数 */
+let resetposition = (obj, e, X, Y) => {
+    obj.style.display = "block";
+    obj.style.left = e.clientX + X + "px";
+    obj.style.top = e.clientY + Y + "px";
+}
+
+/* 删除列表函数 */
+let dellist = (index) => {
+
+    let quesbar = `<div class="quesbar">
+    <img src="" alt="">
+        <h4>将永久删除“${Array.from(lists)[index].innerText}”。</h4>
+        <h5>您将无法撤销此操作</h5>
+
+        <div class="btns">
+            <button class="cansel" data-confirm="cansel">取消</button>
+            <button class="yes" data-confirm="yes">删除列表</button>
+        </div>
+    </div>`
+    document.body.insertAdjacentHTML('afterbegin', quesbar);
+    let quesb = document.querySelector('.quesbar');
+    /* 模态框确认函数 */
+    let reques = (e) => {
+        let quesb = document.querySelector('.quesbar');
+        if (e.target.dataset.confirm === "cansel") quesb.style.display = "none";
+        else if (!e.target.hasAttribute('data-confirm')) return;
+        else if (e.target.dataset.confirm === "yes") {
+            Array.from(lists)[index].remove()
+            Array.from(areas)[index].remove()
+            Array.from(inputs)[index].remove()
+            Array.from(addtaskitembtns)[index].remove()
+            if (Array.from(lists).length) {
+                Array.from(lists)[0].click();
+            }
+        }
+        quesb.style.display = "none";
+    }
+    /* 键盘确认函数 */
+    let keyreques = (e) => {
+        let quesb = document.querySelector('.quesbar');
+        if (e.code == "KeyQ") {
+            quesb.style.display = "none"
+        }
+        else if (e.code == "Enter") {
+            Array.from(lists)[index].remove()
+            Array.from(areas)[index].remove()
+            Array.from(inputs)[index].remove()
+            Array.from(addtaskitembtns)[index].remove()
+            if (Array.from(lists).length) {
+                Array.from(lists)[0].click();
+            }
+        }
+        quesb.style.display = "none";
+    }
+    quesb.addEventListener('click', reques)
+    document.documentElement.addEventListener('keydown', keyreques)
+
+}
 /* 添加任务条函数 */
 let addtask = (e) => {
     let addtaskitembtnsArr = Array.from(addtaskitembtns);
