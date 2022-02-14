@@ -102,6 +102,7 @@ let dellist = (index) => {
     let keyreques = (e) => {
         let quesb = document.querySelector('.quesbar');
         if (e.code == "KeyQ") {
+            mask.style.display = "none";
             quesb.style.display = "none"
         }
         else if (e.code == "Enter") {
