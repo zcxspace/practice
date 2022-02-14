@@ -8,8 +8,7 @@ let addtaskarea = document.querySelector('.addtaskarea');
 let inputs = addtaskarea.getElementsByClassName('taskinput');
 let addtaskitembtns = addtaskarea.getElementsByClassName('addtaskitem');
 let menus = document.getElementsByClassName('taskmenu');
-
-
+let mask = document.querySelector('.mask')
 let add = (objs) => {
     objs.forEach(obj => {
         obj.classList.add('hide')
@@ -20,15 +19,12 @@ let addevents = () => {
     let listsArr = Array.from(lists);
     let areasArr = Array.from(areas);
     let addtaskitembtnsArr = Array.from(addtaskitembtns);
-    // console.log(areasArr.length)
 
     for (let i = 0; i < listsArr.length; i++) {
         listsArr[i].addEventListener('click', addtitle)
         listsArr[i].addEventListener('contextmenu', showrightmenu)
         addtaskitembtnsArr[i].addEventListener('click', addtask)
     }
-    // let least = areasArr.length - 1;
-    // console.log(least);
     listsArr[0].click();
 }
 
@@ -40,6 +36,7 @@ let randomdel = () => {
 
 /* 右键显示菜单函数 */
 let showrightmenu = (e) => {
+
     let target = e.target;
     let index = Array.from(lists).indexOf(target);
     randomdel();
@@ -56,6 +53,7 @@ let showrightmenu = (e) => {
     /* 随机左键取消菜单 */
     document.body.addEventListener("click", randomdel);
 
+
     e.preventDefault()
 }
 
@@ -68,7 +66,7 @@ let resetposition = (obj, e, X, Y) => {
 
 /* 删除列表函数 */
 let dellist = (index) => {
-
+    mask.style.display = "block";
     let quesbar = `<div class="quesbar">
     <img src="" alt="">
         <h4>将永久删除“${Array.from(lists)[index].innerText}”。</h4>
@@ -83,6 +81,7 @@ let dellist = (index) => {
     let quesb = document.querySelector('.quesbar');
     /* 模态框确认函数 */
     let reques = (e) => {
+
         let quesb = document.querySelector('.quesbar');
         if (e.target.dataset.confirm === "cansel") quesb.style.display = "none";
         else if (!e.target.hasAttribute('data-confirm')) return;
@@ -96,6 +95,8 @@ let dellist = (index) => {
             }
         }
         quesb.style.display = "none";
+        mask.style.display = "none";
+
     }
     /* 键盘确认函数 */
     let keyreques = (e) => {
@@ -111,12 +112,14 @@ let dellist = (index) => {
             if (Array.from(lists).length) {
                 Array.from(lists)[0].click();
             }
+            quesb.style.display = "none";
+            mask.style.display = "none";
+
+            document.body.removeEventListener('keydown', keyreques)
         }
-        quesb.style.display = "none";
     }
     quesb.addEventListener('click', reques)
-    document.documentElement.addEventListener('keydown', keyreques)
-
+    document.body.addEventListener('keydown', keyreques)
 }
 /* 添加任务条函数 */
 let addtask = (e) => {
