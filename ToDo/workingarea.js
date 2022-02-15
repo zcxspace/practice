@@ -69,7 +69,7 @@ let dellist = (index) => {
     mask.style.display = "block";
     let quesbar = `<div class="quesbar">
     <img src="" alt="">
-        <h4>将永久删除“${Array.from(lists)[index].innerText}”。</h4>
+        <h4>将永久删除“${Array.from(lists)[index].querySelector('.listtitle').innerText}”。</h4>
         <h5>您将无法撤销此操作</h5>
 
         <div class="btns">
@@ -138,8 +138,8 @@ let addtitle = (e) => {
     let addtaskitembtnsArr = Array.from(addtaskitembtns);
     let areasArr = Array.from(areas);
     let inputsArr = Array.from(inputs);
-    let title = e.target.innerText
-    infoleft.innerText = title;
+    let listtitle = e.target.querySelector('.listtitle');
+    infoleft.innerText = listtitle.innerText;
     add(areasArr);
     add(addtaskitembtnsArr);
     add(inputsArr)
@@ -148,11 +148,13 @@ let addtitle = (e) => {
     addtaskitembtnsArr[index].classList.remove('hide');
     inputsArr[index].classList.remove('hide')
 
+
 }
 
 
+
 let addlistfun = () => {
-    let listitem = `<div class="listitem" ><i class="iconfont icon-liebiao"></i>默认列表</div>`
+    let listitem = `<div class="listitem" ><i class="iconfont icon-liebiao"></i><h4 class="listtitle">默认列表</h4><div class="counter">1</div></div>`
     let area = `<div class="taskarea"></div>`
     let addarea = `<button class="addtaskitem">添加任务条</button><input type="text" class="taskinput">`
     diyarea.insertAdjacentHTML('afterbegin', listitem);
