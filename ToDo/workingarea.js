@@ -9,12 +9,13 @@ let inputs = addtaskarea.getElementsByClassName('taskinput');
 let addtaskitembtns = addtaskarea.getElementsByClassName('addtaskitem');
 let menus = document.getElementsByClassName('taskmenu');
 let mask = document.querySelector('.mask')
+/* 遍历隐藏元素函数 */
 let add = (objs) => {
     objs.forEach(obj => {
         obj.classList.add('hide')
     })
 }
-
+/* 为list绑定event函数 */
 let addevents = () => {
     let listsArr = Array.from(lists);
     let areasArr = Array.from(areas);
@@ -141,6 +142,17 @@ let dellist = (index) => {
     quesb.addEventListener('click', reques)
     document.body.addEventListener('keydown', keyreques)
 }
+
+/* 添加list状态函数 */
+let addstate = (e) => {
+    e.target.classList.toggle('change');
+    e.target.nextElementSibling.classList.toggle('linethrough');
+    let list = e.target.parentNode;
+    if (!list.hasAttribute('done')) {
+        list.setAttribute('done', 'yes');
+    }
+    else list.removeAttribute('done');
+}
 /* 添加任务条函数 */
 let addtask = (e) => {
     let addtaskitembtnsArr = Array.from(addtaskitembtns);
@@ -148,10 +160,20 @@ let addtask = (e) => {
     let inputsArr = Array.from(inputs);
     let value = inputsArr[index].value
     let areasArr = Array.from(areas);
-    let taskitem = `<div class="taskitem">${value}</div>`
+    let taskitem = `<div class="taskitem"><button class="done"><i class="iconfont icon-wancheng2"></i></button><p class="taskcontent">${value}</p></div>`
     areasArr[index].insertAdjacentHTML('beforeend', taskitem);
+    /* 动态获取所有状态按钮 */
+    let dones = document.getElementsByClassName('done')
+    Array.from(dones).forEach(done => {
+        done.addEventListener('click', addstate);
+    })
+
 }
-/* 添加list函数 */
+
+
+
+
+/* 添加list title函数 */
 let addtitle = (e) => {
     let listsArr = Array.from(lists);
     let addtaskitembtnsArr = Array.from(addtaskitembtns);
@@ -166,10 +188,8 @@ let addtitle = (e) => {
     areasArr[index].classList.remove('hide')
     addtaskitembtnsArr[index].classList.remove('hide');
     inputsArr[index].classList.remove('hide')
-
-
 }
-
+/*添加list函数 */
 let addlistfun = () => {
     let listitem = `<div class="listitem" ><i class="iconfont icon-liebiao"></i><h4 class="listtitle">默认列表</h4><div class="counter">1</div></div>`
     let area = `<div class="taskarea"></div>`
