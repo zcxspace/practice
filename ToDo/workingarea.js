@@ -35,20 +35,25 @@ let groupaddevents = () => {
 let randomdel = (arrlike) => {
     Array.from(arrlike).forEach(menu => menu.remove());
 }
-/* group右键显示菜单函数 */
-let showgroupmenu = (e) => {
-    let index = Array.from(groupitems).indexOf(e.target);
-    randomdel(grouplidemenus)
-    let gmenu = `<div class="grouplidemenu">
-                    <button class="grename">重新命名</button>
-                    <button class="gdelete">删除改列表</button>
-                </div>`
-    document.body.insertAdjacentHTML('afterbegin', gmenu);
-    let grouplidemenu = document.querySelector('.grouplidemenu');
-    resetposition(grouplidemenu, e, 5, 5);
-    document.body.addEventListener("click", () => { randomdel(grouplidemenus) });
-    e.preventDefault();
+
+/* 重命名函数 */
+let rename = (clicktarget) => {
+    let title = clicktarget.querySelector('.title').innerText;
+    let input = document.createElement('input');
+    let beforetitle = clicktarget.querySelector('.title')
+    input.value = title;
+    beforetitle.replaceWith(input);
+    input.focus();
+    input.select();
+    input.onblur = function () {
+        beforetitle.innerText = this.value;
+        this.replaceWith(beforetitle);
+        clicktarget.click();
+    }
 }
+
+
+
 /* list右键显示菜单函数 */
 let showrightmenu = (e) => {
 
@@ -64,21 +69,39 @@ let showrightmenu = (e) => {
     let taskmenu = document.querySelector('.taskmenu');
     /* 删除 */
     let del = document.querySelector('.delete');
-    del.addEventListener('click', () => { dellist(index) })
+    del.addEventListener('click', () => { dellist(target) })
     resetposition(taskmenu, e, 5, 5);
 
     /* 随机左键取消菜单 */
     document.body.addEventListener("click", () => { randomdel(menus) });
 
     /* 重命名 */
-    let rename = taskmenu.querySelector('.rename');
-    rename.addEventListener('click', () => { relistname(index) });
+    let renamebtn = taskmenu.querySelector('.rename');
+    renamebtn.addEventListener('click', () => { rename(target) });
 
     /* 移动分组 */
     let remove = taskmenu.querySelector('.remove');
     creategroupsmene()
     e.preventDefault()
 
+}
+/* group右键显示菜单函数 */
+let showgroupmenu = (e) => {
+    let target = e.target;
+    let index = Array.from(groupitems).indexOf(target);
+    randomdel(grouplidemenus)
+    let gmenu = `<div class="grouplidemenu">
+                    <button class="grename">重新命名</button>
+                    <button class="gdelete">删除改列表</button>
+                </div>`
+    document.body.insertAdjacentHTML('afterbegin', gmenu);
+    let grouplidemenu = document.querySelector('.grouplidemenu');
+    resetposition(grouplidemenu, e, 5, 5);
+    document.body.addEventListener("click", () => { randomdel(grouplidemenus) });
+
+    let grename = document.querySelector('.grename');
+    grename.addEventListener('click', () => { rename(target) })
+    e.preventDefault();
 }
 /* 显示分组菜单函数 */
 let creategroupsmene = () => {
@@ -100,21 +123,8 @@ let removeinfun = (index) => {
 let removeoutfun = (index) => {
 
 }
-/* 重命名函数 */
-let relistname = (index) => {
-    let title = Array.from(lists)[index].querySelector('.listtitle');
-    let beforetitle = title.innerText;
-    let input = document.createElement('input');
-    input.value = beforetitle
-    title.replaceWith(input);
-    input.focus();
-    input.select();
-    input.onblur = function () {
-        title.innerText = this.value;
-        this.replaceWith(title);
-        Array.from(lists)[index].click();
-    }
-}
+
+
 /* 设置模态框位置函数 */
 let resetposition = (obj, e, X, Y) => {
     obj.style.display = "block";
@@ -123,12 +133,12 @@ let resetposition = (obj, e, X, Y) => {
 }
 
 /* 删除列表函数 */
-let dellist = (index) => {
+let dellist = (clicktarget) => {
     /* 背景蒙版 */
     mask.style.display = "block";
     let quesbar = `<div class="quesbar">
     <img src="" alt="">
-        <h4>将永久删除“${Array.from(lists)[index].querySelector('.listtitle').innerText}”。</h4>
+        <h4>将永久删除“${clicktarget.querySelector('.title').innerText}”。</h4>
         <h5>您将无法撤销此操作</h5>
 
         <div class="btns">
@@ -217,7 +227,7 @@ let addtitle = (e) => {
     let addtaskitembtnsArr = Array.from(addtaskitembtns);
     let areasArr = Array.from(areas);
     let inputsArr = Array.from(inputs);
-    let listtitle = e.target.querySelector('.listtitle');
+    let listtitle = e.target.querySelector('.title');
     infoleft.innerText = listtitle.innerText;
     add(areasArr);
     add(addtaskitembtnsArr);
@@ -229,7 +239,7 @@ let addtitle = (e) => {
 }
 /*添加list函数 */
 let addlistfun = () => {
-    let listitem = `<div class="listitem" ><i class="iconfont icon-liebiao"></i><h4 class="listtitle">默认列表</h4><div class="counter">1</div></div>`
+    let listitem = `<div class="listitem" ><i class="iconfont icon-liebiao"></i><h4 class="title">默认列表</h4><div class="counter">1</div></div>`
     let area = `<div class="taskarea"></div>`
     let addarea = `<button class="addtaskitem">添加任务条</button><input type="text" class="taskinput">`
     diyarea.insertAdjacentHTML('afterbegin', listitem);
@@ -241,7 +251,7 @@ addlist.addEventListener('click', addlistfun);
 
 /* 添加分组条函数 */
 let addgroupfun = () => {
-    let groupitem = `<div class="groupitem"><i class="iconfont icon-fenzu"></i><p class="groupname">分组名</p><i class="iconfont icon-zhankai"></i></div>`
+    let groupitem = `<div class="groupitem"><i class="iconfont icon-fenzu"></i><p class="title">分组名</p><i class="iconfont icon-zhankai"></i></div>`
     diyarea.insertAdjacentHTML('afterbegin', groupitem);
     groupaddevents();
 }
