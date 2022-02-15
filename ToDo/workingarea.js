@@ -88,6 +88,7 @@ let showrightmenu = (e) => {
     /* 删除 */
     let del = document.querySelector('.delete');
     del.addEventListener('click', () => { dellist(target) })
+
     resetposition(taskmenu, e, 5, 5);
 
     /* 随机左键取消菜单 */
@@ -176,6 +177,7 @@ let dellist = (clicktarget) => {
             quesb.style.display = "none"
         }
         else if (e.code == "Enter") {
+            let index = Array.from(lists).indexOf(clicktarget);
             Array.from(lists)[index].remove()
             Array.from(areas)[index].remove()
             Array.from(inputs)[index].remove()
