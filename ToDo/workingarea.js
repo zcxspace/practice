@@ -9,6 +9,9 @@ let inputs = addtaskarea.getElementsByClassName('taskinput');
 let addtaskitembtns = addtaskarea.getElementsByClassName('addtaskitem');
 let menus = document.getElementsByClassName('taskmenu');
 let mask = document.querySelector('.mask')
+
+/* 创建分组变量 */
+let addgroup = document.querySelector('.addgroup');
 /* 遍历隐藏元素函数 */
 let add = (objs) => {
     objs.forEach(obj => {
@@ -42,7 +45,9 @@ let showrightmenu = (e) => {
     let index = Array.from(lists).indexOf(target);
     randomdel();
     let menu = `<div class="taskmenu">
+    <button class="remove">将列表移动到...</button>
                     <button class="rename">重新命名</button>
+                    
         <button class="delete">删除改列表</button>
                 </div>`
     document.body.insertAdjacentHTML('afterbegin', menu);
@@ -58,6 +63,7 @@ let showrightmenu = (e) => {
     let rename = taskmenu.querySelector('.rename');
     rename.addEventListener('click', () => { relistname(index) });
 
+    /* 移动分组 */
     e.preventDefault()
 
 }
@@ -147,11 +153,11 @@ let dellist = (index) => {
 let addstate = (e) => {
     e.target.classList.toggle('change');
     e.target.nextElementSibling.classList.toggle('linethrough');
-    let list = e.target.parentNode;
-    if (!list.hasAttribute('done')) {
-        list.setAttribute('done', 'yes');
+    let task = e.target.parentNode;
+    if (!task.hasAttribute('done')) {
+        task.setAttribute('done', 'yes');
     }
-    else list.removeAttribute('done');
+    else task.removeAttribute('done');
 }
 /* 添加任务条函数 */
 let addtask = (e) => {
@@ -169,7 +175,6 @@ let addtask = (e) => {
     })
 
 }
-
 
 
 
@@ -201,3 +206,9 @@ let addlistfun = () => {
 }
 addlist.addEventListener('click', addlistfun);
 
+/* 添加分组条函数 */
+let addgroupfun = () => {
+    let groupitem = `<div class="groupitem"><i class="iconfont icon-fenzu"></i><p class="groupname">分组名</p><i class="iconfont icon-zhankai"></i></div>`
+    diyarea.insertAdjacentHTML('afterbegin', groupitem);
+}
+addgroup.addEventListener('click', addgroupfun);
