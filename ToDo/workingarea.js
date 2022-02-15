@@ -68,6 +68,7 @@ let relistname = (index) => {
     input.value = beforetitle
     title.replaceWith(input);
     input.focus();
+    input.select();
     input.onblur = function () {
         title.innerText = this.value;
         this.replaceWith(title);
