@@ -52,7 +52,25 @@ let rename = (clicktarget) => {
     }
 }
 
+/* group右键显示菜单函数 */
+let showgroupmenu = (e) => {
+    let target = e.target;
+    randomdel(grouplidemenus)
+    let gmenu = `<div class="grouplidemenu">
+                    <button class="grename">重新命名</button>
+                    <button class="gdelete">删除</button>
+                </div>`
+    document.body.insertAdjacentHTML('afterbegin', gmenu);
+    let grouplidemenu = document.querySelector('.grouplidemenu');
+    resetposition(grouplidemenu, e, 5, 5);
+    document.body.addEventListener("click", () => { randomdel(grouplidemenus) });
 
+    let grename = document.querySelector('.grename');
+    grename.addEventListener('click', () => { rename(target) })
+    let gdelete = document.querySelector('.gdelete');
+    // gdelete.addEventListener('click', delgroup)
+    e.preventDefault();
+}
 
 /* list右键显示菜单函数 */
 let showrightmenu = (e) => {
@@ -85,30 +103,13 @@ let showrightmenu = (e) => {
     e.preventDefault()
 
 }
-/* group右键显示菜单函数 */
-let showgroupmenu = (e) => {
-    let target = e.target;
-    let index = Array.from(groupitems).indexOf(target);
-    randomdel(grouplidemenus)
-    let gmenu = `<div class="grouplidemenu">
-                    <button class="grename">重新命名</button>
-                    <button class="gdelete">删除改列表</button>
-                </div>`
-    document.body.insertAdjacentHTML('afterbegin', gmenu);
-    let grouplidemenu = document.querySelector('.grouplidemenu');
-    resetposition(grouplidemenu, e, 5, 5);
-    document.body.addEventListener("click", () => { randomdel(grouplidemenus) });
 
-    let grename = document.querySelector('.grename');
-    grename.addEventListener('click', () => { rename(target) })
-    e.preventDefault();
-}
 /* 显示分组菜单函数 */
 let creategroupsmene = () => {
     let groupmenu = document.createElement('div');
     groupmenu.classList.add('groupmenu')
     for (let i = 0; i < groupitems.length; i++) {
-        let item = `<button class="movetoitem">${i}</button>`
+        let item = `<button class="movetoitem">${Array.from(groupitems)[i].querySelector('.title').innerText}</button>`
         groupmenu.insertAdjacentHTML('afterbegin', item);
     }
     document.querySelector('.remove').append(groupmenu);
