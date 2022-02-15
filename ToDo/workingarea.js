@@ -10,9 +10,9 @@ let addtaskitembtns = addtaskarea.getElementsByClassName('addtaskitem');
 let menus = document.getElementsByClassName('taskmenu');
 let mask = document.querySelector('.mask')
 let groupitems = document.getElementsByClassName('groupitem');
-
 /* 创建分组变量 */
 let addgroup = document.querySelector('.addgroup');
+let grouplidemenus = document.getElementsByClassName('grouplidemenu');
 /* 遍历隐藏元素函数 */
 let add = (objs) => {
     objs.forEach(obj => {
@@ -20,31 +20,41 @@ let add = (objs) => {
     })
 }
 /* 为list绑定event函数 */
-let addevents = () => {
-    let listsArr = Array.from(lists);
-    let areasArr = Array.from(areas);
-    let addtaskitembtnsArr = Array.from(addtaskitembtns);
-
-    for (let i = 0; i < listsArr.length; i++) {
-        listsArr[i].addEventListener('click', addtitle)
-        listsArr[i].addEventListener('contextmenu', showrightmenu)
-        addtaskitembtnsArr[i].addEventListener('click', addtask)
-    }
-    listsArr[0].click();
+let listaddevents = () => {
+    Array.from(lists).forEach(list => { list.addEventListener('click', addtitle) })
+    Array.from(lists).forEach(list => { list.addEventListener('contextmenu', showrightmenu) })
+    Array.from(addtaskitembtns).forEach(btn => { btn.addEventListener('click', addtask) })
+    Array.from(lists)[0].click();
 }
+/* 为group绑定event函数 */
+let groupaddevents = () => {
+    Array.from(groupitems).forEach(item => item.addEventListener('contextmenu', showgroupmenu))
 
+}
 /* 取消菜单函数 */
-let randomdel = () => {
-    let menusArr = Array.from(menus);
-    menusArr.forEach(menu => menu.remove());
+let randomdel = (arrlike) => {
+    Array.from(arrlike).forEach(menu => menu.remove());
 }
-
-/* 右键显示菜单函数 */
+/* group右键显示菜单函数 */
+let showgroupmenu = (e) => {
+    let index = Array.from(groupitems).indexOf(e.target);
+    randomdel(grouplidemenus)
+    let gmenu = `<div class="grouplidemenu">
+                    <button class="grename">重新命名</button>
+                    <button class="gdelete">删除改列表</button>
+                </div>`
+    document.body.insertAdjacentHTML('afterbegin', gmenu);
+    let grouplidemenu = document.querySelector('.grouplidemenu');
+    resetposition(grouplidemenu, e, 5, 5);
+    document.body.addEventListener("click", () => { randomdel(grouplidemenus) });
+    e.preventDefault();
+}
+/* list右键显示菜单函数 */
 let showrightmenu = (e) => {
 
     let target = e.target;
     let index = Array.from(lists).indexOf(target);
-    randomdel();
+    randomdel(menus);
     let menu = `<div class="taskmenu">
                     <button class="remove">将列表移动到...</button>
                     <button class="rename">重新命名</button>
@@ -52,12 +62,13 @@ let showrightmenu = (e) => {
                 </div>`
     document.body.insertAdjacentHTML('afterbegin', menu);
     let taskmenu = document.querySelector('.taskmenu');
-    let del = document.querySelector('.delete');
     /* 删除 */
+    let del = document.querySelector('.delete');
     del.addEventListener('click', () => { dellist(index) })
     resetposition(taskmenu, e, 5, 5);
+
     /* 随机左键取消菜单 */
-    document.body.addEventListener("click", randomdel);
+    document.body.addEventListener("click", () => { randomdel(menus) });
 
     /* 重命名 */
     let rename = taskmenu.querySelector('.rename');
@@ -224,7 +235,7 @@ let addlistfun = () => {
     diyarea.insertAdjacentHTML('afterbegin', listitem);
     mydayinfo.insertAdjacentHTML('afterend', area);
     addtaskarea.insertAdjacentHTML('afterbegin', addarea);
-    addevents()
+    listaddevents()
 }
 addlist.addEventListener('click', addlistfun);
 
@@ -232,5 +243,6 @@ addlist.addEventListener('click', addlistfun);
 let addgroupfun = () => {
     let groupitem = `<div class="groupitem"><i class="iconfont icon-fenzu"></i><p class="groupname">分组名</p><i class="iconfont icon-zhankai"></i></div>`
     diyarea.insertAdjacentHTML('afterbegin', groupitem);
+    groupaddevents();
 }
 addgroup.addEventListener('click', addgroupfun);
