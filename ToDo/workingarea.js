@@ -9,6 +9,7 @@ let inputs = addtaskarea.getElementsByClassName('taskinput');
 let addtaskitembtns = addtaskarea.getElementsByClassName('addtaskitem');
 let menus = document.getElementsByClassName('taskmenu');
 let mask = document.querySelector('.mask')
+let groupitems = document.getElementsByClassName('groupitem');
 
 /* 创建分组变量 */
 let addgroup = document.querySelector('.addgroup');
@@ -45,10 +46,9 @@ let showrightmenu = (e) => {
     let index = Array.from(lists).indexOf(target);
     randomdel();
     let menu = `<div class="taskmenu">
-    <button class="remove">将列表移动到...</button>
+                    <button class="remove">将列表移动到...</button>
                     <button class="rename">重新命名</button>
-                    
-        <button class="delete">删除改列表</button>
+                    <button class="delete">删除改列表</button>
                 </div>`
     document.body.insertAdjacentHTML('afterbegin', menu);
     let taskmenu = document.querySelector('.taskmenu');
@@ -64,7 +64,29 @@ let showrightmenu = (e) => {
     rename.addEventListener('click', () => { relistname(index) });
 
     /* 移动分组 */
+    let remove = taskmenu.querySelector('.remove');
+    creategroupsmene()
     e.preventDefault()
+
+}
+/* 显示分组菜单函数 */
+let creategroupsmene = () => {
+    let groupmenu = document.createElement('div');
+    groupmenu.classList.add('groupmenu')
+    for (let i = 0; i < groupitems.length; i++) {
+        let item = `<button class="movetoitem">${i}</button>`
+        groupmenu.insertAdjacentHTML('afterbegin', item);
+    }
+    document.querySelector('.remove').append(groupmenu);
+}
+
+/* 移动近分组函数 */
+let removeinfun = (index) => {
+    let list = Array.from(lists)[index]
+    Array.from(groupitems)[index].append(list);
+}
+/* 移动出分组函数 */
+let removeoutfun = (index) => {
 
 }
 /* 重命名函数 */
