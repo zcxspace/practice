@@ -53,10 +53,27 @@ let showrightmenu = (e) => {
     /* 随机左键取消菜单 */
     document.body.addEventListener("click", randomdel);
 
+    /* 重命名 */
+    let rename = taskmenu.querySelector('.rename');
+    rename.addEventListener('click', () => { relistname(index) });
 
     e.preventDefault()
-}
 
+}
+/* 重命名函数 */
+let relistname = (index) => {
+    let title = Array.from(lists)[index].querySelector('.listtitle');
+    let beforetitle = title.innerText;
+    let input = document.createElement('input');
+    input.value = beforetitle
+    title.replaceWith(input);
+    input.focus();
+    input.onblur = function () {
+        title.innerText = this.value;
+        this.replaceWith(title);
+        Array.from(lists)[index].click();
+    }
+}
 /* 设置模态框位置函数 */
 let resetposition = (obj, e, X, Y) => {
     obj.style.display = "block";
@@ -66,6 +83,7 @@ let resetposition = (obj, e, X, Y) => {
 
 /* 删除列表函数 */
 let dellist = (index) => {
+    /* 背景蒙版 */
     mask.style.display = "block";
     let quesbar = `<div class="quesbar">
     <img src="" alt="">
@@ -150,8 +168,6 @@ let addtitle = (e) => {
 
 
 }
-
-
 
 let addlistfun = () => {
     let listitem = `<div class="listitem" ><i class="iconfont icon-liebiao"></i><h4 class="listtitle">默认列表</h4><div class="counter">1</div></div>`
