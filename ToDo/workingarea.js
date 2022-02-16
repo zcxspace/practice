@@ -49,6 +49,7 @@ let randomdel = (arrlike) => {
 let rename = (clicktarget) => {
     let title = clicktarget.querySelector('.title').innerText;
     let input = document.createElement('input');
+    input.classList.add('listinput')
     let beforetitle = clicktarget.querySelector('.title')
     input.value = title;
     beforetitle.replaceWith(input);
@@ -62,7 +63,6 @@ let rename = (clicktarget) => {
 
 /* group右键显示菜单函数 */
 let showgroupmenu = (e) => {
-    // let target = e.target;
     randomdel(grouplidemenus)
     let gmenu = `<div class="grouplidemenu">
                     <button class="grename">重新命名</button>
@@ -91,10 +91,8 @@ let removeoutfun = (index) => {
 let removeinfun = (e) => {
     let movetoindex = Array.from(movetoitems).indexOf(e.target);
     console.log(movetoindex);
-    Array.from(groupitems)[movetoindex].append(target);
+    Array.from(groupitems)[movetoindex].querySelector('.grouplistarea').append(target);
 }
-
-
 
 /* list右键显示菜单函数 */
 let showrightmenu = (e) => {
@@ -110,6 +108,7 @@ let showrightmenu = (e) => {
     document.body.insertAdjacentHTML('afterbegin', menu);
     let taskmenu = document.querySelector('.taskmenu');
     /* 删除 */
+
     let del = document.querySelector('.delete');
     del.addEventListener('click', () => { dellist(target) })
 
@@ -145,8 +144,6 @@ let creategroupsmene = () => {
 }
 
 
-
-
 /* 设置模态框位置函数 */
 let resetposition = (obj, e, X, Y) => {
     obj.style.display = "block";
@@ -158,6 +155,7 @@ let resetposition = (obj, e, X, Y) => {
 let dellist = (clicktarget) => {
     /* 背景蒙版 */
     mask.style.display = "block";
+
     let quesbar = `<div class="quesbar">
     <img src="" alt="">
         <h4>将永久删除“${clicktarget.querySelector('.title').innerText}”。</h4>
@@ -168,11 +166,13 @@ let dellist = (clicktarget) => {
             <button class="yes" data-confirm="yes">删除列表</button>
         </div>
     </div>`
+
     document.body.insertAdjacentHTML('afterbegin', quesbar);
+    let index = Array.from(lists).indexOf(clicktarget);
     let quesb = document.querySelector('.quesbar');
     /* 模态框确认函数 */
     let reques = (e) => {
-
+        // let index = Array.from(lists).indexOf(clicktarget);
         let quesb = document.querySelector('.quesbar');
         if (e.target.dataset.confirm === "cansel") quesb.style.display = "none";
         else if (!e.target.hasAttribute('data-confirm')) return;
@@ -192,12 +192,13 @@ let dellist = (clicktarget) => {
     /* 键盘确认函数 */
     let keyreques = (e) => {
         let quesb = document.querySelector('.quesbar');
+
         if (e.code == "KeyQ") {
             mask.style.display = "none";
             quesb.style.display = "none"
         }
         else if (e.code == "Enter") {
-            let index = Array.from(lists).indexOf(clicktarget);
+
             Array.from(lists)[index].remove()
             Array.from(areas)[index].remove()
             Array.from(inputs)[index].remove()
@@ -208,8 +209,9 @@ let dellist = (clicktarget) => {
             quesb.style.display = "none";
             mask.style.display = "none";
 
-            document.body.removeEventListener('keydown', keyreques)
+
         }
+        document.body.removeEventListener('keydown', keyreques)
     }
     quesb.addEventListener('click', reques)
     document.body.addEventListener('keydown', keyreques)
@@ -244,6 +246,7 @@ let addtask = (e) => {
 
 /* 添加list title函数 */
 let addtitle = (e) => {
+    if (!e.target.hasAttribute('data-listid')) return;
     let listsArr = Array.from(lists);
     let addtaskitembtnsArr = Array.from(addtaskitembtns);
     let areasArr = Array.from(areas);
@@ -260,7 +263,7 @@ let addtitle = (e) => {
 }
 /*添加list函数 */
 let addlistfun = () => {
-    let listitem = `<div class="listitem" ><i class="iconfont icon-liebiao"></i><h4 class="title">默认列表</h4><div class="counter">1</div></div>`
+    let listitem = `<div class="listitem" data-listid =''><i class="iconfont icon-liebiao"></i><h4 class="title">默认列表</h4><div class="counter">1</div></div>`
     let area = `<div class="taskarea"></div>`
     let addarea = `<button class="addtaskitem">添加任务条</button><input type="text" class="taskinput">`
     diyarea.insertAdjacentHTML('beforeend', listitem);
