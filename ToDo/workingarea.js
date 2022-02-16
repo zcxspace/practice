@@ -13,6 +13,8 @@ let groupitems = document.getElementsByClassName('groupitem');
 /* 创建分组变量 */
 let addgroup = document.querySelector('.addgroup');
 let grouplidemenus = document.getElementsByClassName('grouplidemenu');
+let movetoitems = document.getElementsByClassName('movetoitem');
+let target;
 /* 遍历隐藏元素函数 */
 let add = (objs) => {
     objs.forEach(obj => {
@@ -24,13 +26,20 @@ let listaddevents = () => {
     Array.from(lists).forEach(list => { list.addEventListener('click', addtitle) })
     Array.from(lists).forEach(list => { list.addEventListener('contextmenu', showrightmenu) })
     Array.from(addtaskitembtns).forEach(btn => { btn.addEventListener('click', addtask) })
-    Array.from(lists)[0].click();
+    Array.from(lists)[lists.length - 1].click();
 }
 /* 为group绑定event函数 */
 let groupaddevents = () => {
     Array.from(groupitems).forEach(item => item.addEventListener('contextmenu', showgroupmenu));
-}
+    Array.from(groupitems).forEach(item => item.addEventListener('click', setgroupstate));
 
+}
+/* 展开/关闭分组函数 */
+let setgroupstate = (e) => {
+    e.target.querySelector('.iconbox').classList.toggle('rotate90deg')
+    e.target.classList.toggle('open')
+    console.log(Array.from(groupitems).indexOf(e.target));
+}
 /* 删除页面所有菜单函数 */
 let randomdel = (arrlike) => {
     Array.from(arrlike).forEach(menu => menu.remove());
@@ -48,13 +57,12 @@ let rename = (clicktarget) => {
     input.onblur = function () {
         beforetitle.innerText = this.value;
         this.replaceWith(beforetitle);
-        clicktarget.click();
     }
 }
 
 /* group右键显示菜单函数 */
 let showgroupmenu = (e) => {
-    let target = e.target;
+    // let target = e.target;
     randomdel(grouplidemenus)
     let gmenu = `<div class="grouplidemenu">
                     <button class="grename">重新命名</button>
@@ -66,16 +74,32 @@ let showgroupmenu = (e) => {
     document.body.addEventListener("click", () => { randomdel(grouplidemenus) });
 
     let grename = document.querySelector('.grename');
-    grename.addEventListener('click', () => { rename(target) })
+    grename.addEventListener('click', () => { rename(e.target) })
     let gdelete = document.querySelector('.gdelete');
     // gdelete.addEventListener('click', delgroup)
     e.preventDefault();
 }
 
+
+/* 移动出分组函数 */
+let removeoutfun = (index) => {
+
+}
+
+
+/* list移动进分组函数 */
+let removeinfun = (e) => {
+    let movetoindex = Array.from(movetoitems).indexOf(e.target);
+    console.log(movetoindex);
+    Array.from(groupitems)[movetoindex].append(target);
+}
+
+
+
 /* list右键显示菜单函数 */
 let showrightmenu = (e) => {
 
-    let target = e.target;
+    target = e.target;
     let index = Array.from(lists).indexOf(target);
     randomdel(menus);
     let menu = `<div class="taskmenu">
@@ -101,9 +125,13 @@ let showrightmenu = (e) => {
     /* 移动分组 */
     let remove = taskmenu.querySelector('.remove');
     creategroupsmene()
+    Array.from(movetoitems).forEach(item => item.addEventListener('click', removeinfun))
+
+
     e.preventDefault()
 
 }
+
 
 /* 显示分组菜单函数 */
 let creategroupsmene = () => {
@@ -111,20 +139,12 @@ let creategroupsmene = () => {
     groupmenu.classList.add('groupmenu')
     for (let i = 0; i < groupitems.length; i++) {
         let item = `<button class="movetoitem">${Array.from(groupitems)[i].querySelector('.title').innerText}</button>`
-        groupmenu.insertAdjacentHTML('afterbegin', item);
+        groupmenu.insertAdjacentHTML('beforeend', item);
     }
     document.querySelector('.remove').append(groupmenu);
 }
 
-/* 移动近分组函数 */
-let removeinfun = (index) => {
-    let list = Array.from(lists)[index]
-    Array.from(groupitems)[index].append(list);
-}
-/* 移动出分组函数 */
-let removeoutfun = (index) => {
 
-}
 
 
 /* 设置模态框位置函数 */
@@ -162,7 +182,7 @@ let dellist = (clicktarget) => {
             Array.from(inputs)[index].remove()
             Array.from(addtaskitembtns)[index].remove()
             if (Array.from(lists).length) {
-                Array.from(lists)[0].click();
+                Array.from(lists)[lists.length - 1].click();
             }
         }
         quesb.style.display = "none";
@@ -183,7 +203,7 @@ let dellist = (clicktarget) => {
             Array.from(inputs)[index].remove()
             Array.from(addtaskitembtns)[index].remove()
             if (Array.from(lists).length) {
-                Array.from(lists)[0].click();
+                Array.from(lists)[lists.length - 1].click();
             }
             quesb.style.display = "none";
             mask.style.display = "none";
@@ -222,8 +242,6 @@ let addtask = (e) => {
 
 }
 
-
-
 /* 添加list title函数 */
 let addtitle = (e) => {
     let listsArr = Array.from(lists);
@@ -254,10 +272,14 @@ addlist.addEventListener('click', addlistfun);
 
 /* 添加分组条函数 */
 let addgroupfun = () => {
-    let groupitem = `<div class="groupitem"><i class="iconfont icon-fenzu"></i><p class="title">分组名</p><i class="iconfont icon-zhankai"></i></div>`
-    diyarea.insertAdjacentHTML('afterbegin', groupitem);
+    let groupitem = `<div class="groupitem"><div class="row1"><i class="iconfont icon-fenzu"></i><p class="title">分组名</p><div class="iconbox"><i class="iconfont icon-zhankai"></i></div></div>
+    <div class="grouplistarea"> 
+
+    </div>
+    </div>`
+    diyarea.insertAdjacentHTML('beforeend', groupitem);
     groupaddevents();
     /* 实现新建分组立即重命名函数 */
-    rename(Array.from(groupitems)[0])
+    rename(Array.from(groupitems)[groupitems.length - 1])
 }
 addgroup.addEventListener('click', addgroupfun);
