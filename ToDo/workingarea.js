@@ -16,6 +16,8 @@ let grouplidemenus = document.getElementsByClassName('grouplidemenu');
 let movetoitems = document.getElementsByClassName('movetoitem');
 let target;//list当前点击元素的目标target
 let hasdoneareas = document.getElementsByTagName('hasdonearea');
+
+
 /* 遍历隐藏元素函数 */
 let add = (objs) => {
     objs.forEach(obj => {
@@ -259,7 +261,7 @@ let dellist = (clicktarget) => {
 let addstate = (e) => {
     let task = e.target.parentNode;
     let nowarea = e.target.parentNode.parentNode;
-
+    let hasdone = nowarea.querySelector('.hasdonearea');
     e.target.classList.toggle('change');
 
     let index = Array.from(areas).indexOf(nowarea);
@@ -273,10 +275,17 @@ let addstate = (e) => {
     }
     else task.removeAttribute('done');
 
-    // if (task.hasAttribute) {
-    //     Array.from(hasdoneareas)[index].append(task);
-    //     // console.log("nihoa")
-    // }
+    if (task.hasAttribute('done')) {
+        hasdone.style.opacity = 1;
+        hasdone.after(task);
+    }
+    else {
+        nowarea.prepend(task);
+        if (hasdone.nextElementSibling == undefined) {
+            hasdone.style.opacity = 0;
+        }
+    }
+
 }
 /* 添加任务条函数 */
 let addtask = (e) => {
@@ -324,6 +333,7 @@ let addlistfun = () => {
     let addarea = `<button class="addtaskitem">添加任务条</button><input type="text" class="taskinput">`
     diyarea.insertAdjacentHTML('beforeend', listitem);
     addtaskarea.insertAdjacentHTML('beforeend', addarea);
+    /* 注意area的插入顺序 */
     let addaaa = document.querySelector(".addtaskarea")
     addaaa.insertAdjacentHTML('beforebegin', area);
     listaddevents()
