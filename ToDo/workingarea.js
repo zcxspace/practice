@@ -128,11 +128,11 @@ let showrightmenu = (e) => {
     let renamebtn = taskmenu.querySelector('.rename');
     renamebtn.addEventListener('click', () => { rename(target) });
 
-    /* 移动分组 */
-    let remove = taskmenu.querySelector('.remove');
+    /* 创建“分组“菜单 */
     creategroupsmene()
-    Array.from(movetoitems).forEach(item => item.addEventListener('click', removeinfun))
 
+    /* 移动分组 */
+    Array.from(movetoitems).forEach(item => item.addEventListener('click', removeinfun))
 
     e.preventDefault()
 
@@ -147,7 +147,11 @@ let creategroupsmene = () => {
         let item = `<button class="movetoitem">${Array.from(groupitems)[i].querySelector('.title').innerText}</button>`
         groupmenu.insertAdjacentHTML('beforeend', item);
     }
-    document.querySelector('.remove').append(groupmenu);
+    /* 判断diyarea区域中是否含有分组 */
+    if (groupmenu.childElementCount) {
+        document.querySelector('.remove').append(groupmenu);
+    }
+
 }
 
 
