@@ -24,7 +24,7 @@ let add = (objs) => {
 /* 为list绑定event函数 */
 let listaddevents = () => {
     Array.from(lists).forEach(list => { list.addEventListener('click', addtitle) })
-    Array.from(lists).forEach(list => { list.addEventListener('contextmenu', showrightmenu) })
+    Array.from(lists).forEach(list => { list.addEventListener('contextmenu', showlistmenu) })
     Array.from(addtaskitembtns).forEach(btn => { btn.addEventListener('click', addtask) })
     Array.from(lists)[lists.length - 1].click();
 }
@@ -63,6 +63,8 @@ let rename = (clicktarget) => {
 
 /* group右键显示菜单函数 */
 let showgroupmenu = (e) => {
+    if (!e.target.hasAttribute('data-id')) return;
+    document.body.click();
     let clicktarget = e.target;
     randomdel(grouplidemenus)
     let gmenu = `<div class="grouplidemenu">
@@ -78,6 +80,7 @@ let showgroupmenu = (e) => {
     grename.addEventListener('click', () => { rename(clicktarget) })
     let canselg = document.querySelector('.canselg');
     canselg.addEventListener('click', () => { removeoutfun(clicktarget) });
+
     e.preventDefault();
 }
 
@@ -102,8 +105,8 @@ let removeinfun = (e) => {
 }
 
 /* list右键显示菜单函数 */
-let showrightmenu = (e) => {
-
+let showlistmenu = (e) => {
+    document.body.click();
     target = e.target;
     let index = Array.from(lists).indexOf(target);
     randomdel(menus);
