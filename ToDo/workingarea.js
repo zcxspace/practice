@@ -28,10 +28,10 @@ let listaddevents = () => {
 }
 /* 为group绑定event函数 */
 let groupaddevents = () => {
-    Array.from(groupitems).forEach(item => item.addEventListener('contextmenu', showgroupmenu))
-
+    Array.from(groupitems).forEach(item => item.addEventListener('contextmenu', showgroupmenu));
 }
-/* 取消菜单函数 */
+
+/* 删除页面所有菜单函数 */
 let randomdel = (arrlike) => {
     Array.from(arrlike).forEach(menu => menu.remove());
 }
@@ -257,5 +257,7 @@ let addgroupfun = () => {
     let groupitem = `<div class="groupitem"><i class="iconfont icon-fenzu"></i><p class="title">分组名</p><i class="iconfont icon-zhankai"></i></div>`
     diyarea.insertAdjacentHTML('afterbegin', groupitem);
     groupaddevents();
+    /* 实现新建分组立即重命名函数 */
+    rename(Array.from(groupitems)[0])
 }
 addgroup.addEventListener('click', addgroupfun);
