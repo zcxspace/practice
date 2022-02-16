@@ -36,9 +36,9 @@ let groupaddevents = () => {
 }
 /* 展开/关闭分组函数 */
 let setgroupstate = (e) => {
+    if (!e.target.hasAttribute('data-id')) return;
     e.target.querySelector('.iconbox').classList.toggle('rotate90deg')
-    e.target.classList.toggle('open')
-    console.log(Array.from(groupitems).indexOf(e.target));
+    e.target.parentNode.classList.toggle('open');
 }
 /* 删除页面所有菜单函数 */
 let randomdel = (arrlike) => {
@@ -263,7 +263,7 @@ let addlistfun = () => {
     let listitem = `<div class="listitem" ><i class="iconfont icon-liebiao"></i><h4 class="title">默认列表</h4><div class="counter">1</div></div>`
     let area = `<div class="taskarea"></div>`
     let addarea = `<button class="addtaskitem">添加任务条</button><input type="text" class="taskinput">`
-    diyarea.insertAdjacentHTML('afterbegin', listitem);
+    diyarea.insertAdjacentHTML('beforeend', listitem);
     mydayinfo.insertAdjacentHTML('afterend', area);
     addtaskarea.insertAdjacentHTML('afterbegin', addarea);
     listaddevents()
@@ -272,7 +272,10 @@ addlist.addEventListener('click', addlistfun);
 
 /* 添加分组条函数 */
 let addgroupfun = () => {
-    let groupitem = `<div class="groupitem"><div class="row1"><i class="iconfont icon-fenzu"></i><p class="title">分组名</p><div class="iconbox"><i class="iconfont icon-zhankai"></i></div></div>
+    let groupitem = `<div class="groupitem">
+    <div class="row1" data-id =''>
+    <i class="iconfont icon-fenzu"></i><p class="title">分组名</p><div class="iconbox"><i class="iconfont icon-zhankai"></i></div>
+    </div>
     <div class="grouplistarea"> 
 
     </div>
