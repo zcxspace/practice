@@ -24,9 +24,23 @@ let add = (objs) => {
 /* 为list绑定event函数 */
 let listaddevents = () => {
     Array.from(lists).forEach(list => { list.addEventListener('click', addtitle) })
+    Array.from(lists).forEach(list => { list.addEventListener('contextmenu', addtitle) })
     Array.from(lists).forEach(list => { list.addEventListener('contextmenu', showlistmenu) })
     Array.from(addtaskitembtns).forEach(btn => { btn.addEventListener('click', addtask) })
+    Array.from(lists).forEach(list => { list.addEventListener('contextmenu', listclickstate) })
+    Array.from(lists).forEach(list => { list.addEventListener('click', listclickstate) })
+
     Array.from(lists)[lists.length - 1].click();
+}
+/* removeall list state 函数 */
+let removeallstate = () => {
+    Array.from(lists).forEach(list => list.classList.remove('active'))
+
+}
+/* 为当前list添加状态 */
+let listclickstate = (e) => {
+    removeallstate()
+    e.target.classList.add('active');
 }
 /* 为group绑定event函数 */
 let groupaddevents = () => {
@@ -65,6 +79,7 @@ let rename = (clicktarget) => {
 let showgroupmenu = (e) => {
     if (!e.target.hasAttribute('data-id')) return;
     document.body.click();
+    removeallstate()
     let clicktarget = e.target;
     randomdel(grouplidemenus)
     let gmenu = `<div class="grouplidemenu">
@@ -101,7 +116,9 @@ let removeoutfun = (clicktarget) => {
 /* list移动进分组函数 */
 let removeinfun = (e) => {
     let movetoindex = Array.from(movetoitems).indexOf(e.target);
-    Array.from(groupitems)[movetoindex].querySelector('.grouplistarea').append(target);
+    Array.from(groupitems)[movetoindex].querySelector('.grouplistarea').prepend(target);
+    removeallstate()
+
 }
 
 /* list右键显示菜单函数 */
@@ -296,7 +313,9 @@ let addgroupfun = () => {
     </div>`
     diyarea.insertAdjacentHTML('beforeend', groupitem);
     groupaddevents();
+    removeallstate()
     /* 实现新建分组立即重命名函数 */
     rename(Array.from(groupitems)[groupitems.length - 1])
+
 }
 addgroup.addEventListener('click', addgroupfun);
