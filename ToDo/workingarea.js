@@ -14,7 +14,7 @@ let groupitems = document.getElementsByClassName('groupitem');
 let addgroup = document.querySelector('.addgroup');
 let grouplidemenus = document.getElementsByClassName('grouplidemenu');
 let movetoitems = document.getElementsByClassName('movetoitem');
-let target;
+let target;//list当前点击元素的目标target
 /* 遍历隐藏元素函数 */
 let add = (objs) => {
     objs.forEach(obj => {
@@ -63,10 +63,11 @@ let rename = (clicktarget) => {
 
 /* group右键显示菜单函数 */
 let showgroupmenu = (e) => {
+    let clicktarget = e.target;
     randomdel(grouplidemenus)
     let gmenu = `<div class="grouplidemenu">
                     <button class="grename">重新命名</button>
-                    <button class="gdelete">删除</button>
+                    <button class="canselg">取消分组</button>
                 </div>`
     document.body.insertAdjacentHTML('afterbegin', gmenu);
     let grouplidemenu = document.querySelector('.grouplidemenu');
@@ -74,23 +75,29 @@ let showgroupmenu = (e) => {
     document.body.addEventListener("click", () => { randomdel(grouplidemenus) });
 
     let grename = document.querySelector('.grename');
-    grename.addEventListener('click', () => { rename(e.target) })
-    let gdelete = document.querySelector('.gdelete');
-    // gdelete.addEventListener('click', delgroup)
+    grename.addEventListener('click', () => { rename(clicktarget) })
+    let canselg = document.querySelector('.canselg');
+    canselg.addEventListener('click', () => { removeoutfun(clicktarget) });
     e.preventDefault();
 }
 
-
-/* 移动出分组函数 */
-let removeoutfun = (index) => {
-
+/* 取消分组函数 */
+let removeoutfun = (clicktarget) => {
+    /* 获取list容器的list数量 */
+    let listnum = clicktarget.nextElementSibling.childElementCount;
+    if (listnum) {
+        let innerlists = clicktarget.nextElementSibling.getElementsByClassName('listitem');
+        Array.from(innerlists).forEach(list => { diyarea.prepend(list) });
+        clicktarget.parentNode.remove();
+    }
+    else {
+        clicktarget.parentNode.remove();
+    }
 }
-
 
 /* list移动进分组函数 */
 let removeinfun = (e) => {
     let movetoindex = Array.from(movetoitems).indexOf(e.target);
-    console.log(movetoindex);
     Array.from(groupitems)[movetoindex].querySelector('.grouplistarea').append(target);
 }
 
@@ -192,7 +199,6 @@ let dellist = (clicktarget) => {
     /* 键盘确认函数 */
     let keyreques = (e) => {
         let quesb = document.querySelector('.quesbar');
-
         if (e.code == "KeyQ") {
             mask.style.display = "none";
             quesb.style.display = "none"
@@ -208,8 +214,6 @@ let dellist = (clicktarget) => {
             }
             quesb.style.display = "none";
             mask.style.display = "none";
-
-
         }
         document.body.removeEventListener('keydown', keyreques)
     }
@@ -263,7 +267,7 @@ let addtitle = (e) => {
 }
 /*添加list函数 */
 let addlistfun = () => {
-    let listitem = `<div class="listitem" data-listid =''><i class="iconfont icon-liebiao"></i><h4 class="title">默认列表</h4><div class="counter">1</div></div>`
+    let listitem = `<div class="listitem" data-listid =""><i class="iconfont icon-liebiao"></i><h4 class="title">默认列表</h4><div class="counter">1</div></div>`
     let area = `<div class="taskarea"></div>`
     let addarea = `<button class="addtaskitem">添加任务条</button><input type="text" class="taskinput">`
     diyarea.insertAdjacentHTML('beforeend', listitem);
