@@ -15,7 +15,13 @@ let addgroup = document.querySelector('.addgroup');
 let grouplidemenus = document.getElementsByClassName('grouplidemenu');
 let movetoitems = document.getElementsByClassName('movetoitem');
 let target;//list当前点击元素的目标target
-
+let hasdoneareas = document.getElementsByTagName('hasdonearea');
+/* 遍历隐藏元素函数 */
+let add = (objs) => {
+    objs.forEach(obj => {
+        obj.classList.add('hide')
+    })
+}
 /* 隐藏所有list清除info函数 */
 let hideall = () => {
     add(Array.from(areas));
@@ -26,13 +32,13 @@ let hideall = () => {
 
 /* 为list绑定event函数 */
 let listaddevents = () => {
-    Array.from(lists).forEach(list => { list.addEventListener('click', addtitle) })
-    Array.from(lists).forEach(list => { list.addEventListener('contextmenu', addtitle) })
-    Array.from(lists).forEach(list => { list.addEventListener('contextmenu', showlistmenu) })
+
     Array.from(addtaskitembtns).forEach(btn => { btn.addEventListener('click', addtask) })
     Array.from(lists).forEach(list => { list.addEventListener('contextmenu', listclickstate) })
     Array.from(lists).forEach(list => { list.addEventListener('click', listclickstate) })
-
+    Array.from(lists).forEach(list => { list.addEventListener('click', addtitle) })
+    Array.from(lists).forEach(list => { list.addEventListener('contextmenu', addtitle) })
+    Array.from(lists).forEach(list => { list.addEventListener('contextmenu', showlistmenu) })
     Array.from(lists)[lists.length - 1].click();
 }
 /* removeall list state 函数 */
@@ -207,7 +213,7 @@ let dellist = (clicktarget) => {
     let quesb = document.querySelector('.quesbar');
     /* 模态框确认函数 */
     let reques = (e) => {
-        // let index = Array.from(lists).indexOf(clicktarget);
+        let index = Array.from(lists).indexOf(clicktarget);
         let quesb = document.querySelector('.quesbar');
         if (e.target.dataset.confirm === "cansel") quesb.style.display = "none";
         else if (!e.target.hasAttribute('data-confirm')) return;
@@ -251,23 +257,34 @@ let dellist = (clicktarget) => {
 
 /* 添加list状态函数 */
 let addstate = (e) => {
-    e.target.classList.toggle('change');
-    e.target.nextElementSibling.classList.toggle('linethrough');
     let task = e.target.parentNode;
+    let nowarea = e.target.parentNode.parentNode;
+
+    e.target.classList.toggle('change');
+
+    let index = Array.from(areas).indexOf(nowarea);
+    console.log(index);
+
+    e.target.nextElementSibling.classList.toggle('linethrough');
+
+
     if (!task.hasAttribute('done')) {
         task.setAttribute('done', 'yes');
     }
     else task.removeAttribute('done');
+
+    // if (task.hasAttribute) {
+    //     Array.from(hasdoneareas)[index].append(task);
+    //     // console.log("nihoa")
+    // }
 }
 /* 添加任务条函数 */
 let addtask = (e) => {
-    let addtaskitembtnsArr = Array.from(addtaskitembtns);
-    let index = addtaskitembtnsArr.indexOf(e.target)
-    let inputsArr = Array.from(inputs);
-    let value = inputsArr[index].value
-    let areasArr = Array.from(areas);
+    let index = Array.from(addtaskitembtns).indexOf(e.target)
+    console.log(index);
+    let value = Array.from(inputs)[index].value
     let taskitem = `<div class="taskitem"><button class="done"><i class="iconfont icon-wancheng2"></i></button><p class="taskcontent">${value}</p></div>`
-    areasArr[index].insertAdjacentHTML('beforeend', taskitem);
+    Array.from(areas)[index].insertAdjacentHTML('afterbegin', taskitem);
     /* 动态获取所有状态按钮 */
     let dones = document.getElementsByClassName('done')
     Array.from(dones).forEach(done => {
@@ -275,37 +292,40 @@ let addtask = (e) => {
     })
 
 }
-/* 遍历隐藏元素函数 */
-let add = (objs) => {
-    objs.forEach(obj => {
-        obj.classList.add('hide')
-    })
-}
+
 /* 添加list title函数 */
 let addtitle = (e) => {
     if (!e.target.hasAttribute('data-listid')) return;
-    let listsArr = Array.from(lists);
-    let addtaskitembtnsArr = Array.from(addtaskitembtns);
-    let areasArr = Array.from(areas);
-    let inputsArr = Array.from(inputs);
+
     let listtitle = e.target.querySelector('.title');
+
+
+    let index = Array.from(lists).indexOf(e.target);
+
+    console.log(index);
+    hideall();
+    Array.from(areas)[index].classList.remove('hide')
+    Array.from(addtaskitembtns)[index].classList.remove('hide');
+    Array.from(inputs)[index].classList.remove('hide')
+
     infoleft.innerText = listtitle.innerText;
-    add(areasArr);
-    add(addtaskitembtnsArr);
-    add(inputsArr)
-    let index = listsArr.indexOf(e.target);
-    areasArr[index].classList.remove('hide')
-    addtaskitembtnsArr[index].classList.remove('hide');
-    inputsArr[index].classList.remove('hide')
+
 }
 /*添加list函数 */
 let addlistfun = () => {
     let listitem = `<div class="listitem" data-listid =""><i class="iconfont icon-liebiao"></i><h4 class="title">默认列表</h4><div class="counter">1</div></div>`
-    let area = `<div class="taskarea"></div>`
+    let area = `<div class="taskarea">
+    <div class="hasdonearea">
+    <div class="hasdonetitle">
+<div class="donetitle">已完成</div>
+</div>
+    </div>
+    </div>`
     let addarea = `<button class="addtaskitem">添加任务条</button><input type="text" class="taskinput">`
     diyarea.insertAdjacentHTML('beforeend', listitem);
-    mydayinfo.insertAdjacentHTML('afterend', area);
-    addtaskarea.insertAdjacentHTML('afterbegin', addarea);
+    addtaskarea.insertAdjacentHTML('beforeend', addarea);
+    let addaaa = document.querySelector(".addtaskarea")
+    addaaa.insertAdjacentHTML('beforebegin', area);
     listaddevents()
 }
 addlist.addEventListener('click', addlistfun);
@@ -321,13 +341,15 @@ let addgroupfun = () => {
     </div>
     </div>`
     diyarea.insertAdjacentHTML('beforeend', groupitem);
+
     groupaddevents();
+
     removeallstate()
+
     /* 实现新建分组立即重命名函数 */
     rename(Array.from(groupitems)[groupitems.length - 1])
     /* 实现新建分组后清除右侧myday区域 */
     hideall();
-
 
 }
 addgroup.addEventListener('click', addgroupfun);
