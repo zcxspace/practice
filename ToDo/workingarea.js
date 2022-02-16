@@ -15,12 +15,15 @@ let addgroup = document.querySelector('.addgroup');
 let grouplidemenus = document.getElementsByClassName('grouplidemenu');
 let movetoitems = document.getElementsByClassName('movetoitem');
 let target;//list当前点击元素的目标target
-/* 遍历隐藏元素函数 */
-let add = (objs) => {
-    objs.forEach(obj => {
-        obj.classList.add('hide')
-    })
+
+/* 隐藏所有list清除info函数 */
+let hideall = () => {
+    add(Array.from(areas));
+    add(Array.from(addtaskitembtns));
+    add(Array.from(inputs))
+    infoleft.innerText = ''
 }
+
 /* 为list绑定event函数 */
 let listaddevents = () => {
     Array.from(lists).forEach(list => { list.addEventListener('click', addtitle) })
@@ -45,8 +48,10 @@ let listclickstate = (e) => {
 /* 为group绑定event函数 */
 let groupaddevents = () => {
     Array.from(groupitems).forEach(item => item.addEventListener('contextmenu', showgroupmenu));
-    Array.from(groupitems).forEach(item => item.addEventListener('click', setgroupstate));
+    Array.from(groupitems).forEach(item => item.querySelector('.row1').addEventListener('click', setgroupstate));
 
+    Array.from(groupitems).forEach(item => item.querySelector('.row1').addEventListener('click', hideall));
+    Array.from(groupitems).forEach(item => item.querySelector('.row1').addEventListener('click', removeallstate));
 }
 /* 展开/关闭分组函数 */
 let setgroupstate = (e) => {
@@ -90,9 +95,10 @@ let showgroupmenu = (e) => {
     let grouplidemenu = document.querySelector('.grouplidemenu');
     resetposition(grouplidemenu, e, 5, 5);
     document.body.addEventListener("click", () => { randomdel(grouplidemenus) });
-
+    /* 重命名函数 */
     let grename = document.querySelector('.grename');
     grename.addEventListener('click', () => { rename(clicktarget) })
+    /* 取消分组函数 */
     let canselg = document.querySelector('.canselg');
     canselg.addEventListener('click', () => { removeoutfun(clicktarget) });
 
@@ -118,14 +124,12 @@ let removeinfun = (e) => {
     let movetoindex = Array.from(movetoitems).indexOf(e.target);
     Array.from(groupitems)[movetoindex].querySelector('.grouplistarea').prepend(target);
     removeallstate()
-
 }
 
 /* list右键显示菜单函数 */
 let showlistmenu = (e) => {
     document.body.click();
     target = e.target;
-    let index = Array.from(lists).indexOf(target);
     randomdel(menus);
     let menu = `<div class="taskmenu">
                     <button class="remove">将列表移动到...</button>
@@ -271,7 +275,12 @@ let addtask = (e) => {
     })
 
 }
-
+/* 遍历隐藏元素函数 */
+let add = (objs) => {
+    objs.forEach(obj => {
+        obj.classList.add('hide')
+    })
+}
 /* 添加list title函数 */
 let addtitle = (e) => {
     if (!e.target.hasAttribute('data-listid')) return;
@@ -316,6 +325,9 @@ let addgroupfun = () => {
     removeallstate()
     /* 实现新建分组立即重命名函数 */
     rename(Array.from(groupitems)[groupitems.length - 1])
+    /* 实现新建分组后清除右侧myday区域 */
+    hideall();
+
 
 }
 addgroup.addEventListener('click', addgroupfun);
