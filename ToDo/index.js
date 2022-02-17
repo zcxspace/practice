@@ -6,9 +6,10 @@ let myday = document.querySelector('.myday');
 let sb = document.querySelector('.sb');
 let showsb = document.querySelector('#showsb');
 
-
-showsb.onclick = () => {
-    sb.classList.toggle('hide');
+/* 显示隐藏侧边栏 */
+let hideside = (e) => {
+    if (e.target.tagName == "BUTTON") return;
+    sb.classList.toggle('changeW');
 }
 bar.onmousedown = (e) => {
     let target = e.target;
