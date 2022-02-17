@@ -42,13 +42,18 @@ let mydayadd = () => {
     <p class="taskcontent">${taskcontent}</p>
     </div>`
     jobarea.insertAdjacentHTML('afterbegin', todaytask);
-    getalldone();
 
+    Array.from(alltasks).forEach(task => task.addEventListener('click', hideside))
+
+    getalldone();
+    todayinput.value = "";
 }
 todaybtn.addEventListener('click', mydayadd)
 Array.from(todayjobs).forEach(job => { job.addEventListener("click", addstate) })
-
-
+/* 阻止鼠标右键默认事件 */
+document.body.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+})
 /* 获取日期函数 */
 let getDate = () => {
     let now = new Date()
@@ -112,6 +117,7 @@ searchbtn.onclick = () => { searchinput.focus() };
 searchinput.addEventListener('focus', getalltask);
 searchinput.addEventListener('input', showsearcharea);
 searchinput.addEventListener('input', filtertask);
+
 
 /* 遍历隐藏元素函数 */
 let add = (objs) => {
@@ -363,7 +369,7 @@ let dellist = (clicktarget) => {
 let addstate = (e) => {
     let task = e.target.parentNode;
     let nowarea = e.target.parentNode.parentNode;
-    console.log(nowarea)
+
     let hasdone = nowarea.querySelector('.hasdonearea');
 
     e.target.classList.toggle('change');
@@ -392,7 +398,7 @@ let addtask = (e) => {
     let value = Array.from(inputs)[index].value
     let taskitem = `<div class="taskitem"><button class="done"><i class="iconfont icon-wancheng2"></i></button><p class="taskcontent">${value}</p></div>`
     Array.from(areas)[index].insertAdjacentHTML('afterbegin', taskitem);
-    console.log(alltasks.length)
+    Array.from(alltasks).forEach(task => task.addEventListener('click', hideside))
     /* 动态获取所有状态按钮 */
     getalldone()
 }
@@ -414,9 +420,12 @@ let addtitle = (e) => {
     infoleft.innerText = listtitle.innerText;
 
 }
+
+
+
 /*添加list函数 */
 let addlistfun = () => {
-    let listitem = `<div class="listitem" data-listid =""><i class="iconfont icon-liebiao"></i><h4 class="title">默认列表</h4><div class="counter">1</div></div>`
+    let listitem = `<div class="listitem" data-listid =""><i class="iconfont icon-liebiao"></i><h4 class="title">默认列表</h4><div class="counter"></div></div>`
     let area = `<div class="taskarea">
     <div class="hasdonearea">
     <div class="hasdonetitle">
@@ -424,7 +433,7 @@ let addlistfun = () => {
 </div>
     </div>
     </div>`
-    let addarea = `<button class="addtaskitem">添加任务条</button><input type="text" class="taskinput">`
+    let addarea = `<button class="addtaskitem"><i class="iconfont icon-tianjia"></i></button><input type="text" class="taskinput" placeholder="添加任务...">`
     diyarea.insertAdjacentHTML('beforeend', listitem);
     addtaskarea.insertAdjacentHTML('beforeend', addarea);
     /* 注意area的插入顺序 */
