@@ -135,7 +135,7 @@ let hideall = () => {
 
 /* 为list绑定event函数 */
 let listaddevents = () => {
-
+    Array.from(lists).forEach(list => { list.addEventListener('click', updatenum) })
     Array.from(addtaskitembtns).forEach(btn => { btn.addEventListener('click', addtask) })
     Array.from(lists).forEach(list => { list.addEventListener('contextmenu', listclickstate) })
     Array.from(lists).forEach(list => { list.addEventListener('click', listclickstate) })
@@ -150,6 +150,23 @@ let listaddevents = () => {
     Array.from(lists).forEach(list => { list.addEventListener('contextmenu', addtitle) })
     Array.from(lists).forEach(list => { list.addEventListener('contextmenu', showlistmenu) })
     Array.from(lists)[lists.length - 1].click();
+}
+
+
+/* 更新当前任务条数目函数 */
+let updatenum = (e) => {
+    let index = Array.from(lists).indexOf(e.target);
+    let taskArr = Array.from(areas)[index].getElementsByClassName('taskitem');
+    let arr = []
+    Array.from(taskArr).forEach(task => {
+        if (!task.hasAttribute('done')) {
+            arr.push(task);
+        }
+    })
+    if (arr.length) {
+        Array.from(lists)[index].querySelector('.counter').innerHTML = arr.length;
+    }
+    else Array.from(lists)[index].querySelector('.counter').innerHTML = '';
 }
 /* removeall list state 函数 */
 let removeallstate = () => {
@@ -196,6 +213,7 @@ let rename = (clicktarget) => {
         clicktarget.click();
     }
 }
+
 
 /* group右键显示菜单函数 */
 let showgroupmenu = (e) => {
@@ -370,6 +388,7 @@ let dellist = (clicktarget) => {
 let addstate = (e) => {
     let task = e.target.parentNode;
     let nowarea = e.target.parentNode.parentNode;
+    let index = Array.from(areas).indexOf(nowarea);
 
     let hasdone = nowarea.querySelector('.hasdonearea');
 
@@ -392,6 +411,10 @@ let addstate = (e) => {
             hasdone.style.opacity = 0;
         }
     }
+    /* 触发任务条更新函数 */
+    /* 判断改区域是否属于areas */
+    if (index != -1) Array.from(lists)[index].click();
+
 }
 /* 添加任务条函数 */
 let addtask = (e) => {
@@ -400,6 +423,8 @@ let addtask = (e) => {
     let taskitem = `<div class="taskitem"><button class="done"><i class="iconfont icon-wancheng2"></i></button><p class="taskcontent">${value}</p></div>`
     Array.from(areas)[index].insertAdjacentHTML('afterbegin', taskitem);
     Array.from(alltasks).forEach(task => task.addEventListener('click', hideside))
+    /* 触发当前列表的任务条更新函数 */
+    Array.from(lists)[index].click()
     /* 动态获取所有状态按钮 */
     getalldone()
 }
