@@ -18,6 +18,65 @@ let target;//list当前点击元素的目标target
 let hasdoneareas = document.getElementsByTagName('hasdonearea');
 
 
+
+
+let searchbtn = document.querySelector('#searchbtn');
+let searchinput = document.querySelector('.searchinput');
+let searcharea = document.querySelector('.search-area');
+/* 获取所有的任务条 */
+let alltasks = document.getElementsByClassName('taskitem')
+let alltasksarea = document.querySelector('.taskitem-area');
+let searchtasks = alltasksarea.getElementsByClassName('taskitem');
+
+/* 显示隐藏搜索模块函数 */
+let showsearcharea = (e) => {
+    if (e.target.value) {
+        searcharea.style.display = "block"
+    }
+    else {
+        searcharea.style.display = "none"
+    }
+
+}
+/* 过滤任务条函数 */
+let filtertask = (e) => {
+    Array.from(searchtasks).forEach(task => {
+        if (task.innerText.includes(e.target.value)) {
+            task.style.display = "block";
+        }
+        else task.style.display = "none"
+    })
+}
+/* 隐藏并清除搜索模块 */
+let clearsearch = () => {
+    searcharea.style.display = "none";
+    searchinput.value = '';
+    alltasksarea.innerHTML = '';
+}
+// let clearsearch = (e) => {
+//     e.target.value = '';
+//     searcharea.style.display = "none"
+//     alltasksarea.innerHTML = '';
+// }
+
+/* 获取所有任务条函数 */
+let getalltask = () => {
+    /* 新建所有的副本 */
+    Array.from(alltasks).forEach(task => {
+        let newtask = `<div class="taskitem">${task.innerHTML}</div>`;
+        alltasksarea.insertAdjacentHTML('beforeend', newtask);
+    })
+
+}
+// searchinput.addEventListener('blur', clearsearch);
+searchinput.addEventListener('focus', getalltask);
+searchinput.addEventListener('input', showsearcharea);
+searchinput.addEventListener('input', filtertask);
+
+
+
+
+
 /* 遍历隐藏元素函数 */
 let add = (objs) => {
     objs.forEach(obj => {
@@ -39,6 +98,7 @@ let listaddevents = () => {
     Array.from(lists).forEach(list => { list.addEventListener('contextmenu', listclickstate) })
     Array.from(lists).forEach(list => { list.addEventListener('click', listclickstate) })
     Array.from(lists).forEach(list => { list.addEventListener('click', addtitle) })
+    Array.from(lists).forEach(list => { list.addEventListener('click', clearsearch) })
     Array.from(lists).forEach(list => { list.addEventListener('contextmenu', addtitle) })
     Array.from(lists).forEach(list => { list.addEventListener('contextmenu', showlistmenu) })
     Array.from(lists)[lists.length - 1].click();
@@ -269,9 +329,9 @@ let addstate = (e) => {
 
     e.target.nextElementSibling.classList.toggle('linethrough');
 
-
+    /* 添加完成状态 */
     if (!task.hasAttribute('done')) {
-        task.setAttribute('done', 'yes');
+        task.setAttribute('done', '');
     }
     else task.removeAttribute('done');
 
@@ -285,15 +345,19 @@ let addstate = (e) => {
             hasdone.style.opacity = 0;
         }
     }
-
 }
 /* 添加任务条函数 */
 let addtask = (e) => {
     let index = Array.from(addtaskitembtns).indexOf(e.target)
-    console.log(index);
     let value = Array.from(inputs)[index].value
     let taskitem = `<div class="taskitem"><button class="done"><i class="iconfont icon-wancheng2"></i></button><p class="taskcontent">${value}</p></div>`
+
     Array.from(areas)[index].insertAdjacentHTML('afterbegin', taskitem);
+
+    console.log(alltasks.length)
+
+
+
     /* 动态获取所有状态按钮 */
     let dones = document.getElementsByClassName('done')
     Array.from(dones).forEach(done => {
@@ -311,7 +375,6 @@ let addtitle = (e) => {
 
     let index = Array.from(lists).indexOf(e.target);
 
-    console.log(index);
     hideall();
     Array.from(areas)[index].classList.remove('hide')
     Array.from(addtaskitembtns)[index].classList.remove('hide');
@@ -363,3 +426,4 @@ let addgroupfun = () => {
 
 }
 addgroup.addEventListener('click', addgroupfun);
+
