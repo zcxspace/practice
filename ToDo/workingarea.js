@@ -17,12 +17,51 @@ let movetoitems = document.getElementsByClassName('movetoitem');
 let target;//list当前点击元素的目标target
 let hasdoneareas = document.getElementsByTagName('hasdonearea');
 
-
+/* 获取所有任务按钮函数 */
+let getalldone = () => {
+    let dones = document.getElementsByClassName('done')
+    Array.from(dones).forEach(done => {
+        done.addEventListener('click', addstate);
+    })
+}
 
 /* 我的一天模块 */
 let job = document.querySelector('.job');
 let mydaybar = document.querySelector('.mydaybar')
-mydaybar.addEventListener('click', () => { job.style.display = "block" })
+let data = document.querySelector('.data');
+let todaybtn = document.querySelector('.todaybtn');
+let todayinput = document.querySelector('.today');
+let jobarea = document.querySelector('.job-content');
+let todayjobs = jobarea.getElementsByClassName('done');
+let mydayadd = () => {
+    let taskcontent = todayinput.value;
+    let todaytask = `<div class="taskitem">
+    <button class="done">
+    <i class="iconfont icon-wancheng2"></i>
+    </button>
+    <p class="taskcontent">${taskcontent}</p>
+    </div>`
+    jobarea.insertAdjacentHTML('afterbegin', todaytask);
+    getalldone();
+
+}
+todaybtn.addEventListener('click', mydayadd)
+Array.from(todayjobs).forEach(job => { job.addEventListener("click", addstate) })
+
+
+/* 获取日期函数 */
+let getDate = () => {
+    let now = new Date()
+    let m = now.getMonth()
+    let d = now.getDate()
+    data.innerHTML = `${m + 1}月${d}日`;
+}
+
+mydaybar.addEventListener('click', () => {
+    job.style.display = "block";
+    mydaybar.classList.add('activemaday')
+    getDate();
+})
 
 
 /* 搜索模块 */
@@ -95,7 +134,12 @@ let listaddevents = () => {
     Array.from(lists).forEach(list => { list.addEventListener('click', listclickstate) })
     Array.from(lists).forEach(list => { list.addEventListener('click', addtitle) })
     Array.from(lists).forEach(list => { list.addEventListener('click', clearsearch) })
-    Array.from(lists).forEach(list => { list.addEventListener('click', () => { job.style.display = "none" }) })
+    Array.from(lists).forEach(list => {
+        list.addEventListener('click', () => {
+            job.style.display = "none"
+            mydaybar.classList.remove('activemaday')
+        })
+    })
     Array.from(lists).forEach(list => { list.addEventListener('contextmenu', addtitle) })
     Array.from(lists).forEach(list => { list.addEventListener('contextmenu', showlistmenu) })
     Array.from(lists)[lists.length - 1].click();
@@ -318,12 +362,10 @@ let dellist = (clicktarget) => {
 let addstate = (e) => {
     let task = e.target.parentNode;
     let nowarea = e.target.parentNode.parentNode;
+    console.log(nowarea)
     let hasdone = nowarea.querySelector('.hasdonearea');
+
     e.target.classList.toggle('change');
-
-    let index = Array.from(areas).indexOf(nowarea);
-    console.log(index);
-
     e.target.nextElementSibling.classList.toggle('linethrough');
 
     /* 添加完成状态 */
@@ -348,19 +390,10 @@ let addtask = (e) => {
     let index = Array.from(addtaskitembtns).indexOf(e.target)
     let value = Array.from(inputs)[index].value
     let taskitem = `<div class="taskitem"><button class="done"><i class="iconfont icon-wancheng2"></i></button><p class="taskcontent">${value}</p></div>`
-
     Array.from(areas)[index].insertAdjacentHTML('afterbegin', taskitem);
-
     console.log(alltasks.length)
-
-
-
     /* 动态获取所有状态按钮 */
-    let dones = document.getElementsByClassName('done')
-    Array.from(dones).forEach(done => {
-        done.addEventListener('click', addstate);
-    })
-
+    getalldone()
 }
 
 /* 添加list title函数 */
