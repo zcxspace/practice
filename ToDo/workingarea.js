@@ -19,7 +19,13 @@ let hasdoneareas = document.getElementsByTagName('hasdonearea');
 
 
 
+/* 我的一天模块 */
+let job = document.querySelector('.job');
+let mydaybar = document.querySelector('.mydaybar')
+mydaybar.addEventListener('click', () => { job.style.display = "block" })
 
+
+/* 搜索模块 */
 let searchbtn = document.querySelector('#searchbtn');
 let searchinput = document.querySelector('#searchinput');
 let searcharea = document.querySelector('.search-area');
@@ -60,7 +66,6 @@ let getalltask = () => {
         let newtask = `<div class="taskitem">${task.innerHTML}</div>`;
         alltasksarea.insertAdjacentHTML('beforeend', newtask);
     })
-
 }
 let search = document.getElementById('#searchbtn');
 searchbtn.onclick = () => { searchinput.focus() };
@@ -90,6 +95,7 @@ let listaddevents = () => {
     Array.from(lists).forEach(list => { list.addEventListener('click', listclickstate) })
     Array.from(lists).forEach(list => { list.addEventListener('click', addtitle) })
     Array.from(lists).forEach(list => { list.addEventListener('click', clearsearch) })
+    Array.from(lists).forEach(list => { list.addEventListener('click', () => { job.style.display = "none" }) })
     Array.from(lists).forEach(list => { list.addEventListener('contextmenu', addtitle) })
     Array.from(lists).forEach(list => { list.addEventListener('contextmenu', showlistmenu) })
     Array.from(lists)[lists.length - 1].click();
