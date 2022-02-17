@@ -60,6 +60,7 @@ let getDate = () => {
 mydaybar.addEventListener('click', () => {
     job.style.display = "block";
     mydaybar.classList.add('activemaday')
+    removeallstate()
     getDate();
 })
 
