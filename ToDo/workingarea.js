@@ -193,6 +193,7 @@ let rename = (clicktarget) => {
     input.onblur = function () {
         beforetitle.innerText = this.value;
         this.replaceWith(beforetitle);
+        clicktarget.click();
     }
 }
 
