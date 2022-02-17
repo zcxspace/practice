@@ -21,7 +21,7 @@ let hasdoneareas = document.getElementsByTagName('hasdonearea');
 
 
 let searchbtn = document.querySelector('#searchbtn');
-let searchinput = document.querySelector('.searchinput');
+let searchinput = document.querySelector('#searchinput');
 let searcharea = document.querySelector('.search-area');
 /* 获取所有的任务条 */
 let alltasks = document.getElementsByClassName('taskitem')
@@ -53,12 +53,6 @@ let clearsearch = () => {
     searchinput.value = '';
     alltasksarea.innerHTML = '';
 }
-// let clearsearch = (e) => {
-//     e.target.value = '';
-//     searcharea.style.display = "none"
-//     alltasksarea.innerHTML = '';
-// }
-
 /* 获取所有任务条函数 */
 let getalltask = () => {
     /* 新建所有的副本 */
@@ -68,14 +62,11 @@ let getalltask = () => {
     })
 
 }
-// searchinput.addEventListener('blur', clearsearch);
+let search = document.getElementById('#searchbtn');
+searchbtn.onclick = () => { searchinput.focus() };
 searchinput.addEventListener('focus', getalltask);
 searchinput.addEventListener('input', showsearcharea);
 searchinput.addEventListener('input', filtertask);
-
-
-
-
 
 /* 遍历隐藏元素函数 */
 let add = (objs) => {
