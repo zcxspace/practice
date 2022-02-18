@@ -18,13 +18,9 @@ let target;//list当前点击元素的目标target
 let hasdoneareas = document.getElementsByTagName('hasdonearea');
 /* 获取所有 其他按钮 */
 let othersbtn = document.querySelectorAll('#others');
-
 let othersmenu = myday.querySelector('.taskmenu');
-
 let changethemebtn = document.querySelector('.changetheme');
 let thememune = document.querySelector('.thememune');
-/* 变换背景函数 */
-
 
 
 /* 给其他按钮绑定函数 */
@@ -45,17 +41,15 @@ changethemebtn.addEventListener('click', () => {
     thememune.style.display = "block";
 })
 document.body.onclick = (e) => {
-
     if (!e.target.hasAttribute('themebtn')) thememune.style.display = "none";
-
 }
 let as = document.querySelector('.thememune').getElementsByTagName('a');
+/* 变换背景函数 */
 let changeback = (e) => {
     let href = e.target.getAttribute('href');
     TODO.style.backgroundImage = `url(${href})`
     e.preventDefault();
 }
-
 Array.from(as).forEach(a => a.addEventListener('click', changeback));
 /* 给a链接加上背景 */
 for (let i = 0; i < as.length; i++) {
@@ -63,20 +57,6 @@ for (let i = 0; i < as.length; i++) {
     Array.from(as)[i].style.backgroundImage = `url(${href})`;
     Array.from(as)[i].setAttribute('themebtn', '');
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* 获取所有任务按钮函数 */
 let getalldone = () => {
@@ -194,10 +174,20 @@ let hideall = () => {
     infoleft.innerText = ''
 }
 
+/* 键盘触发添加任务函数 */
+let addtaskbykey = (e) => {
+    let index = Array.from(inputs).indexOf(e.target);
+    if (e.code == "Enter") {
+        Array.from(addtaskitembtns)[index].click();
+        e.target.value = ''
+    }
+}
+
 /* 为list绑定event函数 */
 let listaddevents = () => {
     Array.from(lists).forEach(list => { list.addEventListener('click', updatenum) })
     Array.from(addtaskitembtns).forEach(btn => { btn.addEventListener('click', addtask) })
+    Array.from(inputs).forEach(input => input.addEventListener('keyup', addtaskbykey))
     Array.from(lists).forEach(list => { list.addEventListener('contextmenu', listclickstate) })
     Array.from(lists).forEach(list => { list.addEventListener('click', listclickstate) })
     Array.from(lists).forEach(list => { list.addEventListener('click', addtitle) })
@@ -507,7 +497,6 @@ let addtitle = (e) => {
     infoleft.innerText = listtitle.innerText;
 
 }
-
 
 
 /*添加list函数 */
