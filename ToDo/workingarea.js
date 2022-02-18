@@ -18,21 +18,64 @@ let target;//list当前点击元素的目标target
 let hasdoneareas = document.getElementsByTagName('hasdonearea');
 /* 获取所有 其他按钮 */
 let othersbtn = document.querySelectorAll('#others');
+
 let othersmenu = myday.querySelector('.taskmenu');
+
 let changethemebtn = document.querySelector('.changetheme');
+let thememune = document.querySelector('.thememune');
+/* 变换背景函数 */
+
+
+
+/* 给其他按钮绑定函数 */
 othersbtn.forEach(btn => {
-    btn.onclick = () => {
+    btn.addEventListener('click', () => {
         if (othersmenu.style.display == "block") {
             othersmenu.style.display = "none"
         }
-        else othersmenu.style.display = "block";
-    }
+        else {
+            othersmenu.style.display = "block";
+        }
+    })
 })
-let showthememenu = () => {
-    othersmenu.style.display = "none"
+
+/* 改变主题按钮 */
+changethemebtn.addEventListener('click', () => {
+    othersmenu.style.display = "none";
+    thememune.style.display = "block";
+})
+document.body.onclick = (e) => {
+
+    if (!e.target.hasAttribute('themebtn')) thememune.style.display = "none";
 
 }
-changethemebtn.addEventListener('click', showthememenu)
+let as = document.querySelector('.thememune').getElementsByTagName('a');
+let changeback = (e) => {
+    let href = e.target.getAttribute('href');
+    TODO.style.backgroundImage = `url(${href})`
+    e.preventDefault();
+}
+
+Array.from(as).forEach(a => a.addEventListener('click', changeback));
+/* 给a链接加上背景 */
+for (let i = 0; i < as.length; i++) {
+    let href = Array.from(as)[i].getAttribute('href');
+    Array.from(as)[i].style.backgroundImage = `url(${href})`;
+    Array.from(as)[i].setAttribute('themebtn', '');
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* 获取所有任务按钮函数 */
