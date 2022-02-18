@@ -452,8 +452,10 @@ let addstate = (e) => {
     let index = Array.from(areas).indexOf(nowarea);
 
     let hasdone = nowarea.querySelector('.hasdonearea');
+    e.target.firstElementChild.classList.toggle('fontchange')
 
     e.target.classList.toggle('change');
+    console.log(e.target.firstElementChild)
     e.target.nextElementSibling.classList.toggle('linethrough');
 
     /* 添加完成状态 */
