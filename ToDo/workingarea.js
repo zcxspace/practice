@@ -22,7 +22,6 @@ let othersmenu = myday.querySelector('.taskmenu');
 let changethemebtn = document.querySelector('.changetheme');
 let thememune = document.querySelector('.thememune');
 
-
 /* 给其他按钮绑定函数 */
 othersbtn.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -76,7 +75,9 @@ let jobarea = document.querySelector('.job-content');
 let todayjobs = jobarea.getElementsByClassName('done');
 let mydayadd = () => {
     let taskcontent = todayinput.value;
-    let todaytask = `<div class="taskitem">
+    let now = new Date();
+    let min = (now.getMinutes() < 10) ? 0 + now.getMinutes() : now.getMinutes();
+    let todaytask = `<div class="taskitem" data-date="${now.getMonth() + 1}月${now.getDate()}日${now.getHours()}:${min}">
     <button class="done">
     <i class="iconfont icon-wancheng2"></i>
     </button>
@@ -86,11 +87,20 @@ let mydayadd = () => {
 
     Array.from(alltasks).forEach(task => task.addEventListener('click', hideside))
 
+
+    /* 创建备忘录 */
+    createpad();
+    Array.from(alltasks).forEach(task => task.addEventListener('click', updatesbarea))
     getalldone();
     todayinput.value = "";
 }
 todaybtn.addEventListener('click', mydayadd)
 Array.from(todayjobs).forEach(job => { job.addEventListener("click", addstate) })
+todayinput.addEventListener('keyup', (e) => {
+    if (e.code == "Enter") {
+        todaybtn.click();
+    }
+})
 /* 阻止鼠标右键默认事件 */
 document.body.addEventListener('contextmenu', (e) => {
     e.preventDefault();
@@ -110,7 +120,6 @@ mydaybar.addEventListener('click', () => {
     getDate();
 })
 
-
 /* 搜索模块 */
 let searchbtn = document.querySelector('#searchbtn');
 let searchinput = document.querySelector('#searchinput');
@@ -119,6 +128,30 @@ let searcharea = document.querySelector('.search-area');
 let alltasks = document.getElementsByClassName('taskitem')
 let alltasksarea = document.querySelector('.taskitem-area');
 let searchtasks = alltasksarea.getElementsByClassName('taskitem');
+
+/* 创建备忘录函数 */
+let createpad = () => {
+    let deadline = document.querySelector('.deadline');
+    let pad = `<textarea name="pad" id="pad" placeholder="点击输入备忘..."></textarea>`
+    deadline.insertAdjacentHTML('afterend', pad);
+}
+let pads = document.getElementsByName('pad')
+
+/* updatesbarea */
+let updatesbarea = (e) => {
+    let task = e.target.parentNode
+    let taskvalue = document.querySelector('.taskvalue');
+    let date = document.querySelector('.date');
+    Array.from(pads).forEach(pad => pad.style.display = 'none');
+    let index = Array.from(alltasks).indexOf(task)
+    Array.from(pads)[index].style.display = 'block';
+    Array.from(pads).forEach(pad => {
+        pad.style.height = task.scrollHeight + 'px';
+    })
+    date.innerText = `创建于:${task.dataset.date}`;
+    taskvalue.innerHTML = task.innerText;
+}
+
 
 /* 显示隐藏搜索模块函数 */
 let showsearcharea = (e) => {
@@ -473,9 +506,15 @@ let addstate = (e) => {
 let addtask = (e) => {
     let index = Array.from(addtaskitembtns).indexOf(e.target)
     let value = Array.from(inputs)[index].value
-    let taskitem = `<div class="taskitem"><button class="done"><i class="iconfont icon-wancheng2"></i></button><p class="taskcontent">${value}</p></div>`
+    let now = new Date();
+    let min = (now.getMinutes() < 10) ? (0 + now.getMinutes()) : now.getMinutes();
+    let taskitem = `<div class="taskitem" data-date="${now.getMonth() + 1}月${now.getDate()}日${now.getHours()}:${min}"><button class="done"><i class="iconfont icon-wancheng2"></i></button><p class="taskcontent">${value}</p></div>`
+    if (value == "") return;
     Array.from(areas)[index].insertAdjacentHTML('afterbegin', taskitem);
     Array.from(alltasks).forEach(task => task.addEventListener('click', hideside))
+    Array.from(alltasks).forEach(task => task.addEventListener('click', updatesbarea))
+    /* 生成备忘录 */
+    createpad();
     /* 触发当前列表的任务条更新函数 */
     Array.from(lists)[index].click()
     /* 动态获取所有状态按钮 */
@@ -509,7 +548,7 @@ let addlistfun = () => {
 </div>
     </div>
     </div>`
-    let addarea = `<button class="addtaskitem"><i class="iconfont icon-tianjia"></i></button><input type="text" class="taskinput" placeholder="添加任务...">`
+    let addarea = `<button class="addtaskitem"><i class="iconfont icon-tianjia"></i></button><input type="text" class="taskinput" placeholder="添加任务..." required>`
     diyarea.insertAdjacentHTML('beforeend', listitem);
     addtaskarea.insertAdjacentHTML('beforeend', addarea);
     /* 注意area的插入顺序 */
