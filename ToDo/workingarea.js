@@ -16,6 +16,24 @@ let grouplidemenus = document.getElementsByClassName('grouplidemenu');
 let movetoitems = document.getElementsByClassName('movetoitem');
 let target;//list当前点击元素的目标target
 let hasdoneareas = document.getElementsByTagName('hasdonearea');
+/* 获取所有 其他按钮 */
+let othersbtn = document.querySelectorAll('#others');
+let othersmenu = myday.querySelector('.taskmenu');
+let changethemebtn = document.querySelector('.changetheme');
+othersbtn.forEach(btn => {
+    btn.onclick = () => {
+        if (othersmenu.style.display == "block") {
+            othersmenu.style.display = "none"
+        }
+        else othersmenu.style.display = "block";
+    }
+})
+let showthememenu = () => {
+    othersmenu.style.display = "none"
+
+}
+changethemebtn.addEventListener('click', showthememenu)
+
 
 /* 获取所有任务按钮函数 */
 let getalldone = () => {
@@ -434,8 +452,6 @@ let addtitle = (e) => {
     if (!e.target.hasAttribute('data-listid')) return;
 
     let listtitle = e.target.querySelector('.title');
-
-
     let index = Array.from(lists).indexOf(e.target);
 
     hideall();
