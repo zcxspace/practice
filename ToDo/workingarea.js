@@ -76,7 +76,8 @@ let todayjobs = jobarea.getElementsByClassName('done');
 let mydayadd = () => {
     let taskcontent = todayinput.value;
     let now = new Date();
-    let min = (now.getMinutes() < 10) ? 0 + now.getMinutes() : now.getMinutes();
+    let min = (now.getMinutes() < 10) ? '0' + now.getMinutes() : now.getMinutes();
+    console.log(min)
     let todaytask = `<div class="taskitem" data-date="${now.getMonth() + 1}月${now.getDate()}日${now.getHours()}:${min}">
     <button class="done">
     <i class="iconfont icon-wancheng2"></i>
@@ -507,7 +508,7 @@ let addtask = (e) => {
     let index = Array.from(addtaskitembtns).indexOf(e.target)
     let value = Array.from(inputs)[index].value
     let now = new Date();
-    let min = (now.getMinutes() < 10) ? (0 + now.getMinutes()) : now.getMinutes();
+    let min = (now.getMinutes() < 10) ? '0' + now.getMinutes() : now.getMinutes();
     let taskitem = `<div class="taskitem" data-date="${now.getMonth() + 1}月${now.getDate()}日${now.getHours()}:${min}"><button class="done"><i class="iconfont icon-wancheng2"></i></button><p class="taskcontent">${value}</p></div>`
     if (value == "") return;
     Array.from(areas)[index].insertAdjacentHTML('afterbegin', taskitem);
