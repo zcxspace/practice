@@ -1,3 +1,5 @@
+// const { default: axios } = require("axios");
+
 let addlist = document.querySelector('#addlist')
 let diyarea = document.querySelector('.diyarea')
 let lists = diyarea.getElementsByClassName('listitem');
@@ -261,6 +263,8 @@ let removeallstate = () => {
 /* 为当前list添加状态 */
 let listclickstate = (e) => {
     removeallstate()
+    console.log(Array.from(lists).indexOf(e.target));
+    console.log(e.target.getAttribute('dex'))
     e.target.classList.add('active');
 }
 /* 为group绑定event函数 */
@@ -294,6 +298,7 @@ let rename = (clicktarget) => {
     input.select();
     input.onblur = function () {
         beforetitle.innerText = this.value;
+        changelistdata("修改数据", clicktarget.getAttribute('dex'), this.value);
         this.replaceWith(beforetitle);
         clicktarget.click();
     }
@@ -410,6 +415,7 @@ let resetposition = (obj, e, X, Y) => {
 let dellist = (clicktarget) => {
     /* 背景蒙版 */
     mask.style.display = "block";
+    console.log(clicktarget)
 
     let quesbar = `<div class="quesbar">
     <img src="" alt="">
@@ -432,10 +438,13 @@ let dellist = (clicktarget) => {
         if (e.target.dataset.confirm === "cansel") quesb.style.display = "none";
         else if (!e.target.hasAttribute('data-confirm')) return;
         else if (e.target.dataset.confirm === "yes") {
+
+            changelistdata("删除数据", clicktarget.getAttribute('dex'), clicktarget.innerText)
             Array.from(lists)[index].remove()
             Array.from(areas)[index].remove()
             Array.from(inputs)[index].remove()
             Array.from(addtaskitembtns)[index].remove()
+
             if (Array.from(lists).length) {
                 Array.from(lists)[lists.length - 1].click();
             }
@@ -457,6 +466,7 @@ let dellist = (clicktarget) => {
             Array.from(areas)[index].remove()
             Array.from(inputs)[index].remove()
             Array.from(addtaskitembtns)[index].remove()
+            // changelistdata("删除数据", clicktarget.getAttribute('dex'), clicktarget.innerText)
             if (Array.from(lists).length) {
                 Array.from(lists)[lists.length - 1].click();
             }
@@ -506,11 +516,18 @@ let addstate = (e) => {
 /* 添加任务条函数 */
 let addtask = (e) => {
     let index = Array.from(addtaskitembtns).indexOf(e.target)
-    let value = Array.from(inputs)[index].value
+    let content = Array.from(inputs)[index].value
+    if (content == "") return;
     let now = new Date();
     let min = (now.getMinutes() < 10) ? '0' + now.getMinutes() : now.getMinutes();
-    let taskitem = `<div class="taskitem" data-date="${now.getMonth() + 1}月${now.getDate()}日${now.getHours()}:${min}"><button class="done"><i class="iconfont icon-wancheng2"></i></button><p class="taskcontent">${value}</p></div>`
-    if (value == "") return;
+    let datastr = `${now.getMonth() + 1}月${now.getDate()}日${now.getHours()}:${min}`;
+    createtask(index, datastr, content);
+
+}
+/* createtask函数 */
+let createtask = (index, datastr, content) => {
+    let taskitem = `<div class="taskitem" data-date="${datastr}"><button class="done"><i class="iconfont icon-wancheng2"></i></button><p class="taskcontent">${content}</p></div>`
+
     Array.from(areas)[index].insertAdjacentHTML('afterbegin', taskitem);
     Array.from(alltasks).forEach(task => task.addEventListener('click', hideside))
     Array.from(alltasks).forEach(task => task.addEventListener('click', updatesbarea))
@@ -537,10 +554,8 @@ let addtitle = (e) => {
     infoleft.innerText = listtitle.innerText;
 
 }
-
-
-/*添加list函数 */
-let addlistfun = () => {
+/* 创建list函数 */
+let createlist = () => {
     let listitem = `<div class="listitem" data-listid =""><i class="iconfont icon-liebiao"></i><h4 class="title">默认列表</h4><div class="counter"></div></div>`
     let area = `<div class="taskarea">
     <div class="hasdonearea">
@@ -555,9 +570,32 @@ let addlistfun = () => {
     /* 注意area的插入顺序 */
     let addaaa = document.querySelector(".addtaskarea")
     addaaa.insertAdjacentHTML('beforebegin', area);
+    /* 为每个list添加固定下标 */
+
     listaddevents()
 }
+/*添加list函数 */
+let addlistfun = () => {
+    createlist();
+
+    if (lists.length == 1) {
+        Array.from(lists)[0].setAttribute('dex', 0)
+    }
+    else {
+        let last = Array.from(lists)[lists.length - 1];
+        let before = Array.from(lists)[lists.length - 2];
+        last.setAttribute('dex', Number(before.getAttribute('dex')) + 1)
+    }
+}
+
 addlist.addEventListener('click', addlistfun);
+/* 添加list数据 */
+addlist.addEventListener('click', () => {
+    let dex = Array.from(lists)[lists.length - 1].getAttribute('dex');
+    changelistdata("添加数据", dex, "默认标题")
+});
+
+
 
 /* 添加分组条函数 */
 let addgroupfun = () => {
