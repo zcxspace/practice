@@ -65,6 +65,7 @@ let getalldone = () => {
     Array.from(dones).forEach(done => {
         done.addEventListener('click', addstate);
     })
+
 }
 
 /* 我的一天模块 */
@@ -263,8 +264,6 @@ let removeallstate = () => {
 /* 为当前list添加状态 */
 let listclickstate = (e) => {
     removeallstate()
-    console.log(Array.from(lists).indexOf(e.target));
-    console.log(e.target.getAttribute('dex'))
     e.target.classList.add('active');
 }
 /* 为group绑定event函数 */
@@ -489,14 +488,20 @@ let addstate = (e) => {
     e.target.firstElementChild.classList.toggle('fontchange')
 
     e.target.classList.toggle('change');
-    console.log(e.target.firstElementChild)
     e.target.nextElementSibling.classList.toggle('linethrough');
-
+    let tasks = nowarea.getElementsByClassName('taskitem')
+    let dex = task.getAttribute('lastdex');
+    console.log(dex);
     /* 添加完成状态 */
     if (!task.hasAttribute('done')) {
         task.setAttribute('done', '');
     }
-    else task.removeAttribute('done');
+    else {
+        task.removeAttribute('done')
+    };
+
+    console.log(useremail, index, dex);
+    chageitemdata(useremail, index, "null", "null", Number(dex), "修改item状态", "state")
 
     if (task.hasAttribute('done')) {
         hasdone.style.opacity = 1;
@@ -513,6 +518,30 @@ let addstate = (e) => {
     if (index != -1) Array.from(lists)[index].click();
 
 }
+/* createtask函数 */
+let createtask = (index, datastr, content) => {
+    let taskitem = `<div class="taskitem" data-date="${datastr}" ><button class="done"><i class="iconfont icon-wancheng2"></i></button><p class="taskcontent">${content}</p></div>`
+
+    Array.from(areas)[index].insertAdjacentHTML('afterbegin', taskitem);
+    Array.from(alltasks).forEach(task => task.addEventListener('click', hideside))
+    Array.from(alltasks).forEach(task => task.addEventListener('click', updatesbarea))
+
+
+    let innerArr = Array.from(areas)[index].getElementsByClassName('taskitem');
+
+    Array.from(innerArr)[0].setAttribute('lastdex', innerArr.length - 1)
+
+    /* 添加task数据 */
+    console.log(innerArr)
+    console.log(useremail, index, innerArr.length - 1);
+    chageitemdata(useremail, index, content, datastr, innerArr.length - 1, "添加item", "state");
+    /* 生成备忘录 */
+    createpad();
+    /* 触发当前列表的任务条更新函数 */
+    Array.from(lists)[index].click()
+    /* 动态获取所有状态按钮 */
+    getalldone()
+}
 /* 添加任务条函数 */
 let addtask = (e) => {
     let index = Array.from(addtaskitembtns).indexOf(e.target)
@@ -522,22 +551,10 @@ let addtask = (e) => {
     let min = (now.getMinutes() < 10) ? '0' + now.getMinutes() : now.getMinutes();
     let datastr = `${now.getMonth() + 1}月${now.getDate()}日${now.getHours()}:${min}`;
     createtask(index, datastr, content);
+    /*  */
 
 }
-/* createtask函数 */
-let createtask = (index, datastr, content) => {
-    let taskitem = `<div class="taskitem" data-date="${datastr}"><button class="done"><i class="iconfont icon-wancheng2"></i></button><p class="taskcontent">${content}</p></div>`
 
-    Array.from(areas)[index].insertAdjacentHTML('afterbegin', taskitem);
-    Array.from(alltasks).forEach(task => task.addEventListener('click', hideside))
-    Array.from(alltasks).forEach(task => task.addEventListener('click', updatesbarea))
-    /* 生成备忘录 */
-    createpad();
-    /* 触发当前列表的任务条更新函数 */
-    Array.from(lists)[index].click()
-    /* 动态获取所有状态按钮 */
-    getalldone()
-}
 
 /* 添加list title函数 */
 let addtitle = (e) => {
