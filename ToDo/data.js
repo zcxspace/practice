@@ -1,5 +1,3 @@
-
-
 window.onload = () => {
     axios.get('https://qct5x4.api.cloudendpoint.cn/inserLists', {
         params: {
@@ -14,7 +12,9 @@ window.onload = () => {
             createlist();
             Array.from(lists)[i].setAttribute('dex', index)
             Array.from(lists)[i].querySelector('.title').innerHTML = title;
+
         }
+        Array.from(lists)[lists.length - 1].click();
     })
         .catch(function (error) {
             console.log(error);
