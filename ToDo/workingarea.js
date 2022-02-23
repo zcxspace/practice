@@ -485,13 +485,16 @@ let addstate = (e) => {
     let index = Array.from(areas).indexOf(nowarea);
 
     let hasdone = nowarea.querySelector('.hasdonearea');
+    /* 修改按钮样式 */
     e.target.firstElementChild.classList.toggle('fontchange')
-
     e.target.classList.toggle('change');
     e.target.nextElementSibling.classList.toggle('linethrough');
+
     let tasks = nowarea.getElementsByClassName('taskitem')
     let dex = task.getAttribute('lastdex');
+    /* 注意getAttribute返回字符串 */
     console.log(dex);
+
     /* 添加完成状态 */
     if (!task.hasAttribute('done')) {
         task.setAttribute('done', '');
@@ -500,15 +503,15 @@ let addstate = (e) => {
         task.removeAttribute('done')
     };
 
-    console.log(useremail, index, dex);
-    chageitemdata(useremail, index, "null", "null", Number(dex), "修改item状态", "state")
-
     if (task.hasAttribute('done')) {
         hasdone.style.opacity = 1;
         hasdone.after(task);
+        chageItemData(useremail, index, "null", "null", Number(dex), "修改item状态", "state");
+
     }
     else {
         nowarea.prepend(task);
+
         if (hasdone.nextElementSibling == undefined) {
             hasdone.style.opacity = 0;
         }
@@ -527,14 +530,7 @@ let createtask = (index, datastr, content) => {
     Array.from(alltasks).forEach(task => task.addEventListener('click', updatesbarea))
 
 
-    let innerArr = Array.from(areas)[index].getElementsByClassName('taskitem');
 
-    Array.from(innerArr)[0].setAttribute('lastdex', innerArr.length - 1)
-
-    /* 添加task数据 */
-    console.log(innerArr)
-    console.log(useremail, index, innerArr.length - 1);
-    chageitemdata(useremail, index, content, datastr, innerArr.length - 1, "添加item", "state");
     /* 生成备忘录 */
     createpad();
     /* 触发当前列表的任务条更新函数 */
@@ -552,7 +548,13 @@ let addtask = (e) => {
     let datastr = `${now.getMonth() + 1}月${now.getDate()}日${now.getHours()}:${min}`;
     createtask(index, datastr, content);
     /*  */
+    let innerArr = Array.from(areas)[index].getElementsByClassName('taskitem');
 
+    Array.from(innerArr)[0].setAttribute('lastdex', innerArr.length - 1)
+
+    /* 添加task数据 */
+
+    chageItemData(useremail, index, content, datastr, innerArr.length - 1, "添加item", "state");
 }
 
 
