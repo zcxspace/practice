@@ -15,6 +15,7 @@ let groupitems = document.getElementsByClassName('groupitem');
 /* 创建分组变量 */
 let addgroup = document.querySelector('.addgroup');
 let grouplidemenus = document.getElementsByClassName('grouplidemenu');
+let itemMenus = document.getElementsByClassName('itemMenu');
 let movetoitems = document.getElementsByClassName('movetoitem');
 let target;//list当前点击元素的目标target
 let hasdoneareas = document.getElementsByTagName('hasdonearea');
@@ -295,14 +296,33 @@ let rename = (clicktarget) => {
     beforetitle.replaceWith(input);
     input.focus();
     input.select();
-    input.onblur = function () {
-        beforetitle.innerText = this.value;
-        changelistdata("修改数据", clicktarget.getAttribute('dex'), this.value);
-        this.replaceWith(beforetitle);
-        clicktarget.click();
+    console.log(clicktarget)
+    if (clicktarget.hasAttribute('lastdex')) {
+        input.onblur = function () {
+            beforetitle.innerText = this.value;
+            this.replaceWith(beforetitle);
+            /* 修改item数据 */
+            console.log(this)
+            let index = Array.from(areas).indexOf(clicktarget.parentNode);
+            let innerdex = clicktarget.getAttribute('lastdex');
+            chageItemData(useremail, index, this.value, "null", Number(innerdex), "修改item内容", "state");
+        }
+    }
+    if (clicktarget.hasAttribute('data-listid')) {
+        input.onblur = function () {
+            beforetitle.innerText = this.value;
+            changelistdata("修改数据", clicktarget.getAttribute('dex'), this.value);
+            this.replaceWith(beforetitle);
+            clicktarget.click();
+        }
+    }
+    if (clicktarget.hasAttribute('data-id')) {
+        input.onblur = function () {
+            beforetitle.innerText = this.value;
+            this.replaceWith(beforetitle);
+        }
     }
 }
-
 
 /* group右键显示菜单函数 */
 let showgroupmenu = (e) => {
@@ -311,13 +331,16 @@ let showgroupmenu = (e) => {
     removeallstate()
     let clicktarget = e.target;
     randomdel(grouplidemenus)
+
     let gmenu = `<div class="grouplidemenu">
                     <button class="grename">重新命名</button>
                     <button class="canselg">取消分组</button>
                 </div>`
     document.body.insertAdjacentHTML('afterbegin', gmenu);
+
     let grouplidemenu = document.querySelector('.grouplidemenu');
     resetposition(grouplidemenu, e, 5, 5);
+    /* 随机点击删除所有菜单 */
     document.body.addEventListener("click", () => { randomdel(grouplidemenus) });
     /* 重命名函数 */
     let grename = document.querySelector('.grename');
@@ -328,7 +351,36 @@ let showgroupmenu = (e) => {
 
     e.preventDefault();
 }
+/* taskItem右键显示菜单函数 */
+let showItemMenu = (e) => {
+    document.body.click();
+    let clicktarget = e.target;
+    let itemMenu = `<div class="itemMenu">
+                    <button class="changeItem">修改任务</button>
+                    <button class="delItem">删除任务</button>
+                </div>`
+    document.body.insertAdjacentHTML('afterbegin', itemMenu);
+    let itemMenuElement = document.querySelector('.itemMenu');
+    resetposition(itemMenuElement, e, 5, 5);
+    document.body.addEventListener("click", () => { randomdel(itemMenus) });
+    /* 修改任务内容函数 */
+    let changeItem = document.querySelector('.changeItem')
+    changeItem.addEventListener('click', () => { rename(clicktarget) })
+    // clicktarget.remove();
+    // console.log(clicktarget);
+    let delItem = document.querySelector('.delItem');
+    delItem.addEventListener('click', () => { delTaskItem(clicktarget) })
 
+}
+
+/* 删除单条taskItem函数 */
+let delSigleItem = (target) => {
+    let innerdex = target.getAttribute('lastdex');
+    let index = Array.from(areas).indexOf(target.parentNode);
+    chageItemData(useremail, index, "", "", Number(innerdex), "删除单条item", "");
+    target.remove();
+
+}
 /* 取消分组函数 */
 let removeoutfun = (clicktarget) => {
     /* 获取list容器的list数量 */
@@ -349,6 +401,7 @@ let removeinfun = (e) => {
     Array.from(groupitems)[movetoindex].querySelector('.grouplistarea').prepend(target);
     removeallstate()
 }
+
 
 /* list右键显示菜单函数 */
 let showlistmenu = (e) => {
@@ -409,13 +462,8 @@ let resetposition = (obj, e, X, Y) => {
     obj.style.left = e.clientX + X + "px";
     obj.style.top = e.clientY + Y + "px";
 }
-
-/* 删除列表函数 */
-let dellist = (clicktarget) => {
-    /* 背景蒙版 */
-    mask.style.display = "block";
-    console.log(clicktarget)
-
+/* 生成确认框框函数 */
+let createConfirm = (clicktarget) => {
     let quesbar = `<div class="quesbar">
     <img src="" alt="">
         <h4>将永久删除“${clicktarget.querySelector('.title').innerText}”。</h4>
@@ -423,22 +471,61 @@ let dellist = (clicktarget) => {
 
         <div class="btns">
             <button class="cansel" data-confirm="cansel">取消</button>
-            <button class="yes" data-confirm="yes">删除列表</button>
+            <button class="yes" data-confirm="yes">删除</button>
         </div>
     </div>`
-
     document.body.insertAdjacentHTML('afterbegin', quesbar);
+}
+let delTaskItem = (clicktarget) => {
+    mask.style.display = "block";
+    createConfirm(clicktarget);
+
+    let quesb = document.querySelector('.quesbar');
+    let reques = (e) => {
+        console.log(e.target);
+        if (e.target.dataset.confirm == "cansel") quesb.style.display = "none";
+        if (!e.target.hasAttribute('data-confirm')) return;
+        else if (e.target.dataset.confirm == "yes") {
+            delSigleItem(clicktarget);
+        };
+        quesb.style.display = "none";
+        mask.style.display = "none";
+    }
+
+    let keyreques = (e) => {
+        if (e.code == "KeyQ") {
+            mask.style.display = "none";
+            quesb.style.display = "none"
+        }
+        else if (e.code == "Enter") {
+            delSigleItem(clicktarget);
+            mask.style.display = "none";
+            quesb.style.display = "none"
+        }
+        document.body.removeEventListener('keyup', keyreques);
+    }
+    quesb.addEventListener("click", reques);
+    document.body.addEventListener("keyup", keyreques)
+
+
+}
+/* 删除列表函数 */
+let dellist = (clicktarget) => {
+    /* 背景蒙版 */
+    mask.style.display = "block";
+    createConfirm(clicktarget);
     let index = Array.from(lists).indexOf(clicktarget);
     let quesb = document.querySelector('.quesbar');
+
     /* 模态框确认函数 */
     let reques = (e) => {
         let index = Array.from(lists).indexOf(clicktarget);
-        let quesb = document.querySelector('.quesbar');
         if (e.target.dataset.confirm === "cansel") quesb.style.display = "none";
         else if (!e.target.hasAttribute('data-confirm')) return;
         else if (e.target.dataset.confirm === "yes") {
-
-            changelistdata("删除数据", clicktarget.getAttribute('dex'), clicktarget.innerText)
+            /* 删除list数据 */
+            changelistdata("删除数据", clicktarget.getAttribute('dex'), clicktarget.innerText);
+            chageItemData(useremail, index, 'content', 'datastr', 0, '删除当前列表所有task', 'state');
             Array.from(lists)[index].remove()
             Array.from(areas)[index].remove()
             Array.from(inputs)[index].remove()
@@ -452,9 +539,9 @@ let dellist = (clicktarget) => {
         mask.style.display = "none";
 
     }
+
     /* 键盘确认函数 */
     let keyreques = (e) => {
-        let quesb = document.querySelector('.quesbar');
         if (e.code == "KeyQ") {
             mask.style.display = "none";
             quesb.style.display = "none"
@@ -466,6 +553,8 @@ let dellist = (clicktarget) => {
             Array.from(inputs)[index].remove()
             Array.from(addtaskitembtns)[index].remove()
             // changelistdata("删除数据", clicktarget.getAttribute('dex'), clicktarget.innerText)
+            chageItemData(useremail, index, 'content', 'datastr', 0, '删除当前列表所有task', 'state');
+
             if (Array.from(lists).length) {
                 Array.from(lists)[lists.length - 1].click();
             }
@@ -490,7 +579,6 @@ let addstate = (e) => {
     e.target.classList.toggle('change');
     e.target.nextElementSibling.classList.toggle('linethrough');
 
-    let tasks = nowarea.getElementsByClassName('taskitem')
     let dex = task.getAttribute('lastdex');
     /* 注意getAttribute返回字符串 */
     console.log(dex);
@@ -502,16 +590,13 @@ let addstate = (e) => {
     else {
         task.removeAttribute('done')
     };
-
+    chageItemData(useremail, index, "null", "null", Number(dex), "修改item状态", "state");
     if (task.hasAttribute('done')) {
         hasdone.style.opacity = 1;
         hasdone.after(task);
-        chageItemData(useremail, index, "null", "null", Number(dex), "修改item状态", "state");
-
     }
     else {
         nowarea.prepend(task);
-
         if (hasdone.nextElementSibling == undefined) {
             hasdone.style.opacity = 0;
         }
@@ -523,14 +608,13 @@ let addstate = (e) => {
 }
 /* createtask函数 */
 let createtask = (index, datastr, content) => {
-    let taskitem = `<div class="taskitem" data-date="${datastr}" ><button class="done"><i class="iconfont icon-wancheng2"></i></button><p class="taskcontent">${content}</p></div>`
-
+    let taskitem = `<div class="taskitem" data-date="${datastr}" ><button class="done"><i class="iconfont icon-wancheng2"></i></button><p class="title">${content}</p></div>`
     Array.from(areas)[index].insertAdjacentHTML('afterbegin', taskitem);
+    // afterbegin在元素内部第一个子节点之前 下标0 排第一位
+    // beforeend在元素内部结尾字节点之后
+    Array.from(alltasks).forEach(task => task.addEventListener('contextmenu', showItemMenu));
     Array.from(alltasks).forEach(task => task.addEventListener('click', hideside))
     Array.from(alltasks).forEach(task => task.addEventListener('click', updatesbarea))
-
-
-
     /* 生成备忘录 */
     createpad();
     /* 触发当前列表的任务条更新函数 */
@@ -589,7 +673,6 @@ let createlist = () => {
     /* 注意area的插入顺序 */
     let addaaa = document.querySelector(".addtaskarea")
     addaaa.insertAdjacentHTML('beforebegin', area);
-    /* 为每个list添加固定下标 */
 
     listaddevents()
 }
