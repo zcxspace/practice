@@ -479,14 +479,14 @@ let createConfirm = (clicktarget) => {
 let delTaskItem = (clicktarget) => {
     mask.style.display = "block";
     createConfirm(clicktarget);
-
+    let index = Array.from(areas).indexOf(clicktarget.parentNode);
     let quesb = document.querySelector('.quesbar');
     let reques = (e) => {
-        console.log(e.target);
         if (e.target.dataset.confirm == "cansel") quesb.style.display = "none";
         if (!e.target.hasAttribute('data-confirm')) return;
         else if (e.target.dataset.confirm == "yes") {
             delSigleItem(clicktarget);
+            Array.from(lists)[index].click();
         };
         quesb.style.display = "none";
         mask.style.display = "none";
@@ -501,12 +501,12 @@ let delTaskItem = (clicktarget) => {
             delSigleItem(clicktarget);
             mask.style.display = "none";
             quesb.style.display = "none"
+            Array.from(lists)[index].click();
         }
         document.body.removeEventListener('keyup', keyreques);
     }
     quesb.addEventListener("click", reques);
     document.body.addEventListener("keyup", keyreques)
-
 
 }
 /* 删除列表函数 */
