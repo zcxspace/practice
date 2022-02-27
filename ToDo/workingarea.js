@@ -213,8 +213,6 @@ let listclickstate = (e) => {
 let groupaddevents = () => {
     Array.from(groupitems).forEach(item => item.addEventListener('contextmenu', showgroupmenu));
     Array.from(groupitems).forEach(item => item.querySelector('.row1').addEventListener('click', setgroupstate));
-    Array.from(groupitems).forEach(item => item.querySelector('.row1').addEventListener('click', (e) => { console.log(e.target.parentNode) }));
-
     Array.from(groupitems).forEach(item => item.querySelector('.row1').addEventListener('click', hideall));
     Array.from(groupitems).forEach(item => item.querySelector('.row1').addEventListener('click', removeallstate));
 }
@@ -239,7 +237,6 @@ let rename = (clicktarget) => {
     beforetitle.replaceWith(input);
     input.focus();
     input.select();
-    console.log(clicktarget)
     if (clicktarget.hasAttribute('lastdex')) {
         input.onblur = function () {
             beforetitle.innerText = this.value;
@@ -263,6 +260,9 @@ let rename = (clicktarget) => {
         input.onblur = function () {
             beforetitle.innerText = this.value;
             this.replaceWith(beforetitle);
+            let index = clicktarget.getAttribute('dex');
+            /* 添加group数据 */
+            changeGroupData(useremail, Number(index), this.value, "添加分组");
         }
     }
 }
@@ -350,6 +350,7 @@ let removeinfun = (e) => {
 let showlistmenu = (e) => {
     document.body.click();
     target = e.target;
+    console.log(target)
     randomdel(menus);
     let menu = `<div class="taskmenu">
                     <button class="remove">将列表移动到...</button>
@@ -622,17 +623,20 @@ let createlist = () => {
 /*添加list函数 */
 let addlistfun = () => {
     createlist();
+    setIndex(lists);
 
-    if (lists.length == 1) {
-        Array.from(lists)[0].setAttribute('dex', 0)
+}
+/* 设置下标函数 */
+let setIndex = (obj) => {
+    if (obj.length == 1) {
+        Array.from(obj)[0].setAttribute('dex', 0)
     }
     else {
-        let last = Array.from(lists)[lists.length - 1];
-        let before = Array.from(lists)[lists.length - 2];
+        let last = Array.from(obj)[obj.length - 1];
+        let before = Array.from(obj)[obj.length - 2];
         last.setAttribute('dex', Number(before.getAttribute('dex')) + 1)
     }
 }
-
 addlist.addEventListener('click', addlistfun);
 /* 添加list数据 */
 addlist.addEventListener('click', () => {
@@ -657,6 +661,8 @@ let addgroupfun = () => {
     groupaddevents();
 
     removeallstate()
+    /* 给group设置固定下标 */
+    setIndex(groupitems);
 
     /* 实现新建分组立即重命名函数 */
     rename(Array.from(groupitems)[groupitems.length - 1])
