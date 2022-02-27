@@ -69,62 +69,10 @@ let getalldone = () => {
 
 }
 
-/* 我的一天模块 */
-let job = document.querySelector('.job');
-let mydaybar = document.querySelector('.mydaybar')
-let data = document.querySelector('.data');
-let todaybtn = document.querySelector('.todaybtn');
-let todayinput = document.querySelector('.today');
-let jobarea = document.querySelector('.job-content');
-let todayjobs = jobarea.getElementsByClassName('done');
-let mydayadd = () => {
-    let taskcontent = todayinput.value;
-    let now = new Date();
-    let min = (now.getMinutes() < 10) ? '0' + now.getMinutes() : now.getMinutes();
-    console.log(min)
-    let todaytask = `<div class="taskitem" data-date="${now.getMonth() + 1}月${now.getDate()}日${now.getHours()}:${min}">
-    <button class="done">
-    <i class="iconfont icon-wancheng2"></i>
-    </button>
-    <p class="taskcontent">${taskcontent}</p>
-    </div>`
-    jobarea.insertAdjacentHTML('afterbegin', todaytask);
-
-    Array.from(alltasks).forEach(task => task.addEventListener('click', hideside))
-
-
-    /* 创建备忘录 */
-    createpad();
-    Array.from(alltasks).forEach(task => task.addEventListener('click', updatesbarea))
-    getalldone();
-    todayinput.value = "";
-}
-todaybtn.addEventListener('click', mydayadd)
-Array.from(todayjobs).forEach(job => { job.addEventListener("click", addstate) })
-todayinput.addEventListener('keyup', (e) => {
-    if (e.code == "Enter") {
-        todaybtn.click();
-    }
-})
 /* 阻止鼠标右键默认事件 */
 document.body.addEventListener('contextmenu', (e) => {
     e.preventDefault();
 })
-/* 获取日期函数 */
-let getDate = () => {
-    let now = new Date()
-    let m = now.getMonth()
-    let d = now.getDate()
-    data.innerHTML = `${m + 1}月${d}日`;
-}
-
-mydaybar.addEventListener('click', () => {
-    job.style.display = "block";
-    mydaybar.classList.add('activemaday')
-    removeallstate()
-    getDate();
-})
-
 /* 搜索模块 */
 let searchbtn = document.querySelector('#searchbtn');
 let searchinput = document.querySelector('#searchinput');
@@ -230,12 +178,6 @@ let listaddevents = () => {
     Array.from(lists).forEach(list => { list.addEventListener('click', listclickstate) })
     Array.from(lists).forEach(list => { list.addEventListener('click', addtitle) })
     Array.from(lists).forEach(list => { list.addEventListener('click', clearsearch) })
-    Array.from(lists).forEach(list => {
-        list.addEventListener('click', () => {
-            job.style.display = "none"
-            mydaybar.classList.remove('activemaday')
-        })
-    })
     Array.from(lists).forEach(list => { list.addEventListener('contextmenu', addtitle) })
     Array.from(lists).forEach(list => { list.addEventListener('contextmenu', showlistmenu) })
     Array.from(lists)[lists.length - 1].click();
@@ -271,6 +213,7 @@ let listclickstate = (e) => {
 let groupaddevents = () => {
     Array.from(groupitems).forEach(item => item.addEventListener('contextmenu', showgroupmenu));
     Array.from(groupitems).forEach(item => item.querySelector('.row1').addEventListener('click', setgroupstate));
+    Array.from(groupitems).forEach(item => item.querySelector('.row1').addEventListener('click', (e) => { console.log(e.target.parentNode) }));
 
     Array.from(groupitems).forEach(item => item.querySelector('.row1').addEventListener('click', hideall));
     Array.from(groupitems).forEach(item => item.querySelector('.row1').addEventListener('click', removeallstate));
@@ -316,7 +259,7 @@ let rename = (clicktarget) => {
             clicktarget.click();
         }
     }
-    if (clicktarget.hasAttribute('data-id')) {
+    else {
         input.onblur = function () {
             beforetitle.innerText = this.value;
             this.replaceWith(beforetitle);
