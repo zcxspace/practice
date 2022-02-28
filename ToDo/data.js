@@ -35,16 +35,21 @@ window.onload = () => {
                     let target = Array.from(lists)[i];
                     target.querySelector('.title').innerHTML = title;
                     target.setAttribute('dex', index)
+                    console.log(index);
                     Array.from(groupitems)[groupIndex].querySelector('.grouplistarea').append(target);
                 }
                 else {
+                    console.log(index);
                     Array.from(lists)[i].setAttribute('dex', index)
                     Array.from(lists)[i].querySelector('.title').innerHTML = title;
                 }
 
-                console.log(Array.from(lists));
+
             }
+            console.log('2')
+            console.log(Array.from(lists));
             Array.from(lists)[lists.length - 1].click();
+            document.querySelector('.infoleft').innerHTML = '';
         })
             .catch(function (error) {
                 console.log(error);
@@ -84,12 +89,12 @@ window.onload = () => {
                     }
                     getalldone();
                 })
-
+                hideall();
             })
             .catch(function (e) {
                 console.log(e);
             })
-    }, 50)
+    }, 150)
 
 
 
@@ -111,7 +116,6 @@ let changelistdata = (action, dex, content, groupIndex) => {
             act: action,
             groupIndex: Number(groupIndex),
         })
-        console.log("我运行了")
     }, 0)
 
 }
