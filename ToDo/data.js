@@ -1,31 +1,63 @@
+
 window.onload = () => {
-    axios.get('https://qct5x4.api.cloudendpoint.cn/inserLists', {
+    /* 获取所有的group */
+    axios.get('https://qct5x4.api.cloudendpoint.cn/insertGroup', {
         params: {
             email: useremail,
         }
-    }).then(function (response) {
-        let userdata = JSON.parse(JSON.stringify(response.data));
-        let Arr = userdata.emailuserinfo;
-        for (let i = 0; i < Arr.length; i++) {
-            let { title } = Arr[i];
-            let { index } = Arr[i];
-            createlist();
-            Array.from(lists)[i].setAttribute('dex', index)
-            Array.from(lists)[i].querySelector('.title').innerHTML = title;
-
-        }
-        Array.from(lists)[lists.length - 1].click();
+    }).then((res) => {
+        console.log(res.data);
+        res.data.forEach(group => {
+            let { index, groupName } = group;
+            createGroup(index, groupName);
+            groupaddevents();
+            removeallstate()
+            hideall();
+        })
+    }).catch((e) => {
+        console.log(e);
     })
-        .catch(function (error) {
-            console.log(error);
-        });
+    setTimeout(() => {
+        /* 返回列表数据 */
+        axios.get('https://qct5x4.api.cloudendpoint.cn/inserLists', {
+            params: {
+                email: useremail,
+            }
+        }).then(function (response) {
+            let userdata = response.data;
+            let Arr = userdata.emailuserinfo;
+            /* 创建列表 */
+            console.log(Arr);
+            for (let i = 0; i < Arr.length; i++) {
+                let { title, index, groupIndex } = Arr[i];
+                createlist();
+                if (groupIndex != -1) {
+                    let target = Array.from(lists)[i];
+                    target.querySelector('.title').innerHTML = title;
+                    target.setAttribute('dex', index)
+                    Array.from(groupitems)[groupIndex].querySelector('.grouplistarea').append(target);
+                }
+                else {
+                    Array.from(lists)[i].setAttribute('dex', index)
+                    Array.from(lists)[i].querySelector('.title').innerHTML = title;
+                }
+
+                console.log(Array.from(lists));
+            }
+            Array.from(lists)[lists.length - 1].click();
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }, 100);
 
     setTimeout(() => {
+        /* 获取taskItem信息 */
         axios.get('https://qct5x4.api.cloudendpoint.cn/insertItems', {
             params: {
                 email: useremail,
             }
-        })
+        })//创建taskItem
             .then(function (res) {
                 let itemInfoArr = res.data.itemInfo;
 
@@ -49,7 +81,6 @@ window.onload = () => {
                         Array.from(innerArr)[0].setAttribute('lastdex', innerdex);
                         Array.from(innerArr)[0].setAttribute('done', '');
                         Array.from(lists)[index].click();
-
                     }
                     getalldone();
                 })
@@ -58,7 +89,9 @@ window.onload = () => {
             .catch(function (e) {
                 console.log(e);
             })
-    }, 0)
+    }, 50)
+
+
 
 }
 /* 设置用户名称 */
@@ -68,19 +101,17 @@ let userinfo = document.querySelector('.userinfo');
 let useremail = userdata.get('email')
 userinfo.innerHTML = useremail
 /* 修改list数据函数 */
-let changelistdata = (action, dex, content) => {
+let changelistdata = (action, dex, content, groupIndex) => {
     /* 注意Json数据格式 */
-    let index = String(dex);
-    let act = action;
-    let title = content;
-
     setTimeout(() => {
-        axios.post('https://qct5x4.api.cloudendpoint.cn/Lists', {
+        axios.post('https://qct5x4.api.cloudendpoint.cn/chagelists', {
             email: useremail,
-            title: title,
-            index: index,
-            act: act
+            title: content,
+            index: dex,
+            act: action,
+            groupIndex: Number(groupIndex),
         })
+        console.log("我运行了")
     }, 0)
 
 }
@@ -103,4 +134,19 @@ let chageItemData = (email, index, content, datastr, taskinnerdex, action, state
             console.log(e)
         })
     console.log('调用了一次')
+}
+
+
+let changeGroupData = (email, index, groupName, action) => {
+    axios.post('https://qct5x4.api.cloudendpoint.cn/changeGroup', {
+        email: email,
+        index: Number(index),
+        groupName: groupName,
+        action: action
+    }).then((res) => {
+        console.log(res)
+    })
+        .catch((e) => {
+            console.log(e)
+        })
 }
