@@ -145,19 +145,12 @@ searchinput.addEventListener('focus', getalltask);
 searchinput.addEventListener('input', showsearcharea);
 searchinput.addEventListener('input', filtertask);
 
-
-/* 遍历隐藏元素函数 */
-let add = (objs) => {
-    objs.forEach(obj => {
-        obj.classList.add('hide')
-    })
-}
 /* 隐藏所有list清除info函数 */
 let hideall = () => {
-    add(Array.from(areas));
-    add(Array.from(addtaskitembtns));
-    add(Array.from(inputs))
-    infoleft.innerText = ''
+    Array.from(areas).forEach(obj => obj.classList.add('hide'))
+    Array.from(addtaskitembtns).forEach(obj => obj.classList.add('hide'))
+    Array.from(inputs).forEach(obj => obj.classList.add('hide'))
+    infoleft.innerText = '';
 }
 
 /* 键盘触发添加任务函数 */
@@ -358,6 +351,7 @@ let removeinfun = (e) => {
     changelistdata("添加分组下标", index, null, Number(groupDex));
 
     Array.from(groupitems)[movetoindex].querySelector('.grouplistarea').append(target);
+    hideall();
     removeallstate()
 }
 
@@ -602,19 +596,20 @@ let addtask = (e) => {
     chageItemData(useremail, index, content, datastr, innerArr.length - 1, "添加item", "state");
 }
 
+let showAll = (index) => {
+    Array.from(areas)[index].classList.remove('hide')
+    Array.from(addtaskitembtns)[index].classList.remove('hide');
+    Array.from(inputs)[index].classList.remove('hide')
 
+}
 /* 添加list title函数 */
 let addtitle = (e) => {
     if (!e.target.hasAttribute('data-listid')) return;
 
     let listtitle = e.target.querySelector('.title');
     let index = Array.from(lists).indexOf(e.target);
-
     hideall();
-    Array.from(areas)[index].classList.remove('hide')
-    Array.from(addtaskitembtns)[index].classList.remove('hide');
-    Array.from(inputs)[index].classList.remove('hide')
-
+    showAll(index);
     infoleft.innerText = listtitle.innerText;
 
 }
@@ -640,8 +635,34 @@ let createlist = () => {
 /*添加list函数 */
 let addlistfun = () => {
     createlist();
-    setIndex(lists);
-
+    if (lists.length == 1) {
+        Array.from(lists)[0].setAttribute('dex', 0)
+    }
+    else {
+        let last = Array.from(lists)[lists.length - 1];
+        console.log(last);
+        let arr = []
+        for (let item of Array.from(lists)) {
+            let dex = item.getAttribute('dex');
+            arr.push(Number(dex))
+        }
+        console.log(arr)
+        let max = -1;
+        for (let item of arr) {
+            (item < max) ? max = max : max = item
+        }
+        last.setAttribute('dex', max + 1);
+    }
+}
+let getTop = (arr) => {
+    let max = -1;
+    for (let item of arr) {
+        if (item < arr) {
+            max = max;
+        }
+        else max = item;
+    }
+    return max
 }
 /* 设置下标函数 */
 let setIndex = (obj) => {
@@ -658,8 +679,11 @@ addlist.addEventListener('click', addlistfun);
 /* 添加list数据 */
 addlist.addEventListener('click', () => {
     console.log(Array.from(lists));
+
     let dex = Array.from(lists)[lists.length - 1].getAttribute('dex');
+
     changelistdata("添加数据", Number(dex), "默认标题", "-1")
+
 });
 
 
@@ -686,8 +710,6 @@ let addgroupfun = () => {
 
     /* 实现新建分组立即重命名函数 */
     rename(Array.from(groupitems)[groupitems.length - 1])
-
-
     /* 实现新建分组后清除右侧myday区域 */
     hideall();
 
