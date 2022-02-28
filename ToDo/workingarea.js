@@ -251,7 +251,8 @@ let rename = (clicktarget) => {
     if (clicktarget.hasAttribute('data-listid')) {
         input.onblur = function () {
             beforetitle.innerText = this.value;
-            changelistdata("修改数据", clicktarget.getAttribute('dex'), this.value);
+            let dex = clicktarget.getAttribute('dex');
+            changelistdata("修改数据", Number(dex), this.value);
             this.replaceWith(beforetitle);
             clicktarget.click();
         }
@@ -327,8 +328,10 @@ let delSigleItem = (target) => {
 /* 取消分组函数 */
 let removeoutfun = (clicktarget) => {
     /* 获取list容器的list数量 */
+    let dex = clicktarget.parentNode.getAttribute('dex');
     let listnum = clicktarget.nextElementSibling.childElementCount;
     if (listnum) {
+        changelistdata("清除分组下标", -1, null, Number(dex));
         let innerlists = clicktarget.nextElementSibling.getElementsByClassName('listitem');
         Array.from(innerlists).forEach(list => { diyarea.prepend(list) });
         clicktarget.parentNode.remove();
@@ -336,12 +339,25 @@ let removeoutfun = (clicktarget) => {
     else {
         clicktarget.parentNode.remove();
     }
+    let index = clicktarget.parentNode.getAttribute('dex');
+    changeGroupData(useremail, index, null, "删除分组");
 }
 
 /* list移动进分组函数 */
 let removeinfun = (e) => {
+    /* 获取点击菜单的对应下标 */
     let movetoindex = Array.from(movetoitems).indexOf(e.target);
-    Array.from(groupitems)[movetoindex].querySelector('.grouplistarea').prepend(target);
+    console.log(Array.from(groupitems)[movetoindex]);
+
+    let groupDex = Array.from(groupitems)[movetoindex].getAttribute('dex');
+    console.log(groupDex);
+    console.log(target)
+    let index = Array.from(lists).indexOf(target)
+    console.log(index);
+
+    changelistdata("添加分组下标", index, null, Number(groupDex));
+
+    Array.from(groupitems)[movetoindex].querySelector('.grouplistarea').append(target);
     removeallstate()
 }
 
@@ -460,7 +476,7 @@ let dellist = (clicktarget) => {
     createConfirm(clicktarget);
     let index = Array.from(lists).indexOf(clicktarget);
     let quesb = document.querySelector('.quesbar');
-
+    let dex = clicktarget.getAttribute('dex')
     /* 模态框确认函数 */
     let reques = (e) => {
         let index = Array.from(lists).indexOf(clicktarget);
@@ -468,7 +484,8 @@ let dellist = (clicktarget) => {
         else if (!e.target.hasAttribute('data-confirm')) return;
         else if (e.target.dataset.confirm === "yes") {
             /* 删除list数据 */
-            changelistdata("删除数据", clicktarget.getAttribute('dex'), clicktarget.innerText);
+
+            changelistdata("删除数据", Number(dex), clicktarget.innerText);
             chageItemData(useremail, index, 'content', 'datastr', 0, '删除当前列表所有task', 'state');
             Array.from(lists)[index].remove()
             Array.from(areas)[index].remove()
@@ -496,7 +513,7 @@ let dellist = (clicktarget) => {
             Array.from(areas)[index].remove()
             Array.from(inputs)[index].remove()
             Array.from(addtaskitembtns)[index].remove()
-            // changelistdata("删除数据", clicktarget.getAttribute('dex'), clicktarget.innerText)
+            changelistdata("删除数据", Number(dex), clicktarget.innerText)
             chageItemData(useremail, index, 'content', 'datastr', 0, '删除当前列表所有task', 'state');
 
             if (Array.from(lists).length) {
@@ -640,32 +657,37 @@ let setIndex = (obj) => {
 addlist.addEventListener('click', addlistfun);
 /* 添加list数据 */
 addlist.addEventListener('click', () => {
+    console.log(Array.from(lists));
     let dex = Array.from(lists)[lists.length - 1].getAttribute('dex');
-    changelistdata("添加数据", dex, "默认标题")
+    changelistdata("添加数据", Number(dex), "默认标题", "-1")
 });
 
 
-
-/* 添加分组条函数 */
-let addgroupfun = () => {
-    let groupitem = `<div class="groupitem">
+let createGroup = (index, title) => {
+    let groupitem = `<div class="groupitem" dex = ${index}>
     <div class="row1" data-id =''>
-    <i class="iconfont icon-fenzu"></i><p class="title">分组名</p><div class="iconbox"><i class="iconfont icon-zhankai"></i></div>
+    <i class="iconfont icon-fenzu"></i><p class="title">${title}</p><div class="iconbox"><i class="iconfont icon-zhankai"></i></div>
     </div>
     <div class="grouplistarea"> 
-
+    
     </div>
     </div>`
     diyarea.insertAdjacentHTML('beforeend', groupitem);
 
+}
+/* 添加分组条函数 */
+let addgroupfun = () => {
+    createGroup('', '分组名');
     groupaddevents();
-
     removeallstate()
+
     /* 给group设置固定下标 */
     setIndex(groupitems);
 
     /* 实现新建分组立即重命名函数 */
     rename(Array.from(groupitems)[groupitems.length - 1])
+
+
     /* 实现新建分组后清除右侧myday区域 */
     hideall();
 
