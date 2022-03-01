@@ -1,23 +1,25 @@
 
 window.onload = () => {
-    /* 获取所有的group */
-    axios.get('https://qct5x4.api.cloudendpoint.cn/insertGroup', {
-        params: {
-            email: useremail,
-        }
-    }).then((res) => {
-        console.log(res.data);
-        res.data.forEach(group => {
-            let { index, groupName } = group;
-            createGroup(index, groupName);
-            groupaddevents();
-            removeallstate()
-            hideall();
+    let getGroups = function () {
+        /* 获取所有的group */
+        axios.get('https://qct5x4.api.cloudendpoint.cn/insertGroup', {
+            params: {
+                email: useremail,
+            }
+        }).then((res) => {
+            res.data.forEach(group => {
+                let { index, groupName } = group;
+                createGroup(index, groupName);
+                groupaddevents();
+                removeallstate()
+                hideall();
+            })
+        }).catch((e) => {
+            console.log(e);
         })
-    }).catch((e) => {
-        console.log(e);
-    })
-    setTimeout(() => {
+    }();
+
+    let getLists = function () {
         /* 返回列表数据 */
         axios.get('https://qct5x4.api.cloudendpoint.cn/inserLists', {
             params: {
@@ -27,7 +29,6 @@ window.onload = () => {
             let userdata = response.data;
             let Arr = userdata.emailuserinfo;
             /* 创建列表 */
-            console.log(Arr);
             for (let i = 0; i < Arr.length; i++) {
                 let { title, index, groupIndex } = Arr[i];
                 createlist();
@@ -35,28 +36,26 @@ window.onload = () => {
                     let target = Array.from(lists)[i];
                     target.querySelector('.title').innerHTML = title;
                     target.setAttribute('dex', index)
-                    console.log(index);
-                    Array.from(groupitems)[groupIndex].querySelector('.grouplistarea').append(target);
+                    Array.from(groupitems)[index].querySelector('.grouplistarea').append(target);
                 }
                 else {
-                    console.log(index);
                     Array.from(lists)[i].setAttribute('dex', index)
                     Array.from(lists)[i].querySelector('.title').innerHTML = title;
                 }
 
 
             }
-            console.log('2')
             console.log(Array.from(lists));
-            Array.from(lists)[lists.length - 1].click();
+            // Array.from(lists)[lists.length - 1].click();
             document.querySelector('.infoleft').innerHTML = '';
         })
             .catch(function (error) {
                 console.log(error);
             });
-    }, 100);
 
-    setTimeout(() => {
+    }();
+
+    let getItems = function () {
         /* 获取taskItem信息 */
         axios.get('https://qct5x4.api.cloudendpoint.cn/insertItems', {
             params: {
@@ -89,13 +88,13 @@ window.onload = () => {
                     }
                     getalldone();
                 })
-                hideall();
+
             })
             .catch(function (e) {
                 console.log(e);
             })
-    }, 150)
 
+    }();
 
 
 }
@@ -105,6 +104,13 @@ let userdata = new URLSearchParams(str);
 let userinfo = document.querySelector('.userinfo');
 let useremail = userdata.get('email')
 userinfo.innerHTML = useremail
+
+let userimg = document.querySelector(".userimg");
+
+userimg.addEventListener('click', () => {
+    location.href = '/ToDo/signin/signin.html';
+})
+
 /* 修改list数据函数 */
 let changelistdata = (action, dex, content, groupIndex) => {
     /* 注意Json数据格式 */
@@ -121,7 +127,7 @@ let changelistdata = (action, dex, content, groupIndex) => {
 }
 
 /* 修改item数据函数 */
-let chageItemData = (email, index, content, datastr, taskinnerdex, action, state) => {
+let chageItemData = (email, index, content, datastr, taskinnerdex, action, state, padContent) => {
     axios.post('https://qct5x4.api.cloudendpoint.cn/chagetaskitem', {
         email: email,
         index: String(index),
@@ -130,9 +136,10 @@ let chageItemData = (email, index, content, datastr, taskinnerdex, action, state
         innerdex: taskinnerdex,
         action: action,
         state: state,
+        padContent: padContent,
     })
         .then(function (res) {
-            console.log(res);
+            (res.data.padContent == undefined) ? null : pad.value = res.data.padContent;
         })
         .catch(function (e) {
             console.log(e)
