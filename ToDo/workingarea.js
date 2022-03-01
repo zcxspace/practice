@@ -82,28 +82,38 @@ let alltasks = document.getElementsByClassName('taskitem')
 let alltasksarea = document.querySelector('.taskitem-area');
 let searchtasks = alltasksarea.getElementsByClassName('taskitem');
 
-/* 创建备忘录函数 */
-let createpad = () => {
-    let deadline = document.querySelector('.deadline');
-    let pad = `<textarea name="pad" id="pad" placeholder="点击输入备忘..."></textarea>`
-    deadline.insertAdjacentHTML('afterend', pad);
-}
-let pads = document.getElementsByName('pad')
 
-/* updatesbarea */
+let Itemtarget;
+
+/* 更新任务面板函数 */
 let updatesbarea = (e) => {
-    let task = e.target.parentNode
-    let taskvalue = document.querySelector('.taskvalue');
-    let date = document.querySelector('.date');
-    Array.from(pads).forEach(pad => pad.style.display = 'none');
-    let index = Array.from(alltasks).indexOf(task)
-    Array.from(pads)[index].style.display = 'block';
-    Array.from(pads).forEach(pad => {
-        pad.style.height = task.scrollHeight + 'px';
-    })
-    date.innerText = `创建于:${task.dataset.date}`;
-    taskvalue.innerHTML = task.innerText;
+    Itemtarget = e.target;
+    let index = Array.from(areas).indexOf(Itemtarget.parentNode);
+    let dataBar = document.querySelector('.date');
+    let dex = Itemtarget.getAttribute('lastdex');
+    chageItemData(useremail, index, null, null, Number(dex), "获取pad内容", null, null);
+    let title = e.target.querySelector('.title').innerHTML;
+    let top = document.querySelector('.sbtitle');
+    top.innerText = title;
+    dataBar.innerText = Itemtarget.getAttribute('data-date');
+
 }
+
+let pad = document.querySelector('#pad');
+pad.addEventListener('input', () => {
+    pad.style.height = pad.scrollHeight + 'px';
+})
+
+pad.addEventListener('blur', (e) => {
+
+    console.log(Itemtarget);
+    let innerDex = Itemtarget.getAttribute('lastdex');
+    let index = Array.from(areas).indexOf(Itemtarget.parentNode);
+    chageItemData(useremail, index, null, null, Number(innerDex), "修改pad内容", null, e.target.value)
+    document.body.addEventListener('click', () => {
+        Itemtarget.blur();
+    })
+})
 
 
 /* 显示隐藏搜索模块函数 */
@@ -139,9 +149,13 @@ let getalltask = () => {
         alltasksarea.insertAdjacentHTML('beforeend', newtask);
     })
 }
+let removeAlltask = () => {
+    alltasksarea.innerHTML = '';
+}
 let search = document.getElementById('#searchbtn');
 searchbtn.onclick = () => { searchinput.focus() };
 searchinput.addEventListener('focus', getalltask);
+searchinput.addEventListener('blur', removeAlltask)
 searchinput.addEventListener('input', showsearcharea);
 searchinput.addEventListener('input', filtertask);
 
@@ -307,7 +321,6 @@ let showItemMenu = (e) => {
     // console.log(clicktarget);
     let delItem = document.querySelector('.delItem');
     delItem.addEventListener('click', () => { delTaskItem(clicktarget) })
-
 }
 
 /* 删除单条taskItem函数 */
@@ -316,7 +329,6 @@ let delSigleItem = (target) => {
     let index = Array.from(areas).indexOf(target.parentNode);
     chageItemData(useremail, index, "", "", Number(innerdex), "删除单条item", "");
     target.remove();
-
 }
 /* 取消分组函数 */
 let removeoutfun = (clicktarget) => {
@@ -360,7 +372,6 @@ let removeinfun = (e) => {
 let showlistmenu = (e) => {
     document.body.click();
     target = e.target;
-    console.log(target)
     randomdel(menus);
     let menu = `<div class="taskmenu">
                     <button class="remove">将列表移动到...</button>
@@ -570,8 +581,6 @@ let createtask = (index, datastr, content) => {
     Array.from(alltasks).forEach(task => task.addEventListener('contextmenu', showItemMenu));
     Array.from(alltasks).forEach(task => task.addEventListener('click', hideside))
     Array.from(alltasks).forEach(task => task.addEventListener('click', updatesbarea))
-    /* 生成备忘录 */
-    createpad();
     /* 触发当前列表的任务条更新函数 */
     Array.from(lists)[index].click()
     /* 动态获取所有状态按钮 */
@@ -593,7 +602,7 @@ let addtask = (e) => {
 
     /* 添加task数据 */
 
-    chageItemData(useremail, index, content, datastr, innerArr.length - 1, "添加item", "state");
+    chageItemData(useremail, index, content, datastr, innerArr.length - 1, "添加item", "state", "");
 }
 
 let showAll = (index) => {
